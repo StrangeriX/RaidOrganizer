@@ -1,17 +1,17 @@
 from rest_framework import serializers
 from .models import *
 
-class UserSerializer(serializers.ModelSerializer):
 
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['nickname']
+        fields = ["nickname"]
 
 
 class UserDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = '__all__'
+        fields = "__all__"
 
 
 class CharacterSerializer(serializers.ModelSerializer):
@@ -21,9 +21,17 @@ class CharacterSerializer(serializers.ModelSerializer):
 
 
 class GuildSerializer(serializers.ModelSerializer):
+
+    guild_master_name = serializers.SerializerMethodField()
+
+    def get_guild_master_name(self, request):
+        user = UserToGuild.objects.filter(guild_position_id=1).values()
+        user_id = user[0].get("user_id")
+        return User.objects.get(id=user_id).nickname
+
     class Meta:
         model = Guild
-        fields = "__all__"
+        fields = ("guild_name", "guild_master_name")
 
 
 class UserToGuildSerializer(serializers.ModelSerializer):
@@ -37,10 +45,12 @@ class PositionSerializer(serializers.ModelSerializer):
         model = Position
         fields = "__all__"
 
+
 class RaidSerializer(serializers.ModelSerializer):
     class Meta:
         model = Raid
         fields = "__all__"
+
 
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:

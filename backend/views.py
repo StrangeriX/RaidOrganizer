@@ -3,7 +3,7 @@ from rest_framework import generics
 from django.views.generic.detail import DetailView
 from django.http import JsonResponse
 from rest_framework.response import Response
-from rest_framework 			import status, permissions
+from rest_framework import status, permissions
 from rest_framework.views import APIView
 
 from .models import *
@@ -44,6 +44,7 @@ class CharacterView(generics.ListAPIView):
     queryset = Character.objects.all()
     serializer_class = CharacterSerializer
 
+
 # --------------------- Guild -----------------------------
 
 
@@ -52,11 +53,23 @@ class GuildCreate(generics.CreateAPIView):
     serializer_class = GuildSerializer
 
 
+class GuildListView(generics.ListAPIView):
+    queryset = Guild.objects.all()
+    serializer_class = GuildSerializer
+
+
 class GuildDetail(generics.ListAPIView):
     queryset = Guild.objects.all()
     serializer_class = GuildSerializer
 
+    def get(self, request, pk):
+        guilds = Guild.objects.get(id=pk)
+        serializer = GuildSerializer(guilds)
+        return Response(serializer.data)
+
+
 # -------------------USER TO GUILD---------------------------------------
+
 
 class UserToGuildView(generics.ListCreateAPIView):
     # stanowisko jest zdefiniowane, user jest zdefiniowany
@@ -64,30 +77,44 @@ class UserToGuildView(generics.ListCreateAPIView):
     serializer_class = UserToGuildSerializer
 
     def post(self, request):
-        stanowiskoID = request.data['Stanowisko']
-        stanowisko = GuildPosiiton.objects.get(id=stanowiskoID)
-        guildID = request.data['Guild']
-        userID = request.data["User"]
-        if stanowisko.has_many is False:
-            user_count = UserToGuild.objects.filter(Guild_id=guildID, Stanowisko_id=stanowiskoID).count()
+        print(request.data)
+        guild_position_id = request.data["guild_position"]
+        guild_position = GuildPosiiton.objects.get(id=guild_position_id)
+        guild_id = request.data["guild"]
+        userID = request.data["user"]
+        if guild_position.has_many is False:
+            user_count = UserToGuild.objects.filter(
+                guild_id=guild_id, guild_position_id=guild_position_id
+            ).count()
             if user_count >= 1:
-                return Response("nie można", status=status.HTTP_400_BAD_REQUEST)
-        userToGuild = UserToGuild(User_id=userID, Guild_id=guildID, Stanowisko_id=stanowiskoID)
+                return Response(
+                    "There can be only 1 person here",
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+        userToGuild = UserToGuild(
+            user_id=userID, guild_id=guild_id, guild_position_id=guild_position_id
+        )
         userToGuild.save()
-        return Response("elo zjebie", status=status.HTTP_200_OK)
+        return Response("Welcome in guild", status=status.HTTP_200_OK)
 
     def put(self, request):
         serializer = UserToGuildSerializer(data=request.data)
-        guildRole = GuildRole.objects.get(name = 'member')
+        guildRole = GuildRole.objects.get(name="member")
         if ():
-            return Response("There can be only one person here", status=status.HTTP_406_NOT_ACCEPTABLE)
+            return Response(
+                "There can be only one person here",
+                status=status.HTTP_406_NOT_ACCEPTABLE,
+            )
         else:
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data, "przeszło")
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class UserToGuildDetail(generics.ListAPIView, generics.DestroyAPIView, generics.UpdateAPIView):
+
+class UserToGuildDetail(
+    generics.ListAPIView, generics.DestroyAPIView, generics.UpdateAPIView
+):
     queryset = UserToGuild.objects.all()
     serializer_class = UserToGuildSerializer
 
@@ -95,7 +122,10 @@ class UserToGuildDetail(generics.ListAPIView, generics.DestroyAPIView, generics.
         connects = UserToGuild.objects.get(id=pk)
         serializer = UserToGuildSerializer(connects)
         return Response(serializer.data)
+
+
 # ----------------------------------------------------------
+
 
 class PositionView(generics.ListCreateAPIView):
     queryset = Position.objects.all()
@@ -104,11 +134,14 @@ class PositionView(generics.ListCreateAPIView):
 
 # ----------------------------------------------------------
 
+
 class RaidListView(generics.ListCreateAPIView):
     queryset = Raid.objects.all()
     serializer_class = RaidSerializer
 
+
 # ----------------------------------------------------------
+
 
 class GroupView(generics.ListCreateAPIView):
     queryset = Group.objects.all()
