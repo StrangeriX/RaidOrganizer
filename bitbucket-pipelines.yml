@@ -15,7 +15,10 @@ pipelines:
             script:
               - if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
               - pip install pytest
+              - git archive --format=tar.gz devel -o organizer-app.tar.gz
               #- pytest -v tests/* --junitxml=test-reports/report.xml
+            artifacts:
+              - courier-app.tar.gz
         - step:
             name: Lint code
             script:
@@ -24,8 +27,6 @@ pipelines:
               #- flake8 . --extend-exclude=dist,build --show-source --statistics
               - pipe: atlassian/heroku-deploy:1.2.1
                 variables:
-                  HEROKU_API_KEY: '17559a0e-d16d-4943-8875-e391e1b164c9'
-                  HEROKU_APP_NAME: 'raid-organizer'
-                  ZIP_FILE: 'heroku.zip'
-                  # WAIT: '<boolean>' # Optional.
-                  # DEBUG: '<boolean>' # Optional
+                  HEROKU_API_KEY: $HEROKU_API_KEY
+                  HEROKU_APP_NAME: $HEROKU_APP_NAME
+                  ZIP_FILE: organizer-app.tar.gz
