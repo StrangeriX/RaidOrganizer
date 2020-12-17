@@ -4,21 +4,38 @@
 #  The workflow allows running tests and code linting on the default branch.
 
 image: python:3.8
-
 pipelines:
   default:
-    - parallel:
-        - step:
-            name: Test
-            caches:
-              - pip
-            script:
-              - if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-              - pip install pytest
-              #- pytest -v tests/* --junitxml=test-reports/report.xml
-        - step:
-            name: Lint code
-            script:
-              # Enforce style consistency across Python projects https://flake8.pycqa.org/en/latest/manpage.html
-              - pip install flake8
-              - flake8 . --extend-exclude=dist,build --show-source --statistics
+    - step:
+        name: Build
+        caches:
+          - pip
+        script:
+          - pip --version
+          - pip install -r requirements.txt
+          - python manage.py migrate
+          - python manage.py makemigrations
+          - python manage.py migrate
+          - git archive --format=tar.gz master -o organizer-app.tar.gz
+        artifacts:
+          - organizer-app.tar.gz
+    - step:
+        name: Deploy to production
+        deployment: production
+        caches:
+          - pip
+        script:
+          - pipe: atlassian/heroku-deploy:1.2.0
+            variables:
+              HEROKU_API_KEY: $HEROKU_API_KEY
+              HEROKU_APP_NAME: $HEROKU_APP_NAME
+              ZIP_FILE: organizer-app.tar.gz
+  custom:
+    - step:
+        caches:
+          - pip
+        script:
+          - pip --version
+          - pip install -r requirements.txt
+          - git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git master
+
