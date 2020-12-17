@@ -18,7 +18,7 @@ pipelines:
               - git archive --format=tar.gz master -o organizer-app.tar.gz
               #- pytest -v tests/* --junitxml=test-reports/report.xml
             artifacts:
-              - courier-app.tar.gz
+              - organizer-app.tar.gz
         - step:
             name: Lint code
             script:
