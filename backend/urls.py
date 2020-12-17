@@ -14,5 +14,6 @@ urlpatterns = [
     path("userto/<int:pk>", UserToGuildDetail.as_view()),
     path("position", PositionView.as_view()),
     path("raid", RaidListView.as_view()),
+    path("raid/<int:pk>", RaidDetailView.as_view()),
     path("group", GroupView.as_view()),
 ]

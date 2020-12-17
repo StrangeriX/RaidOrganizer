@@ -50,12 +50,13 @@ class CharacterView(generics.ListAPIView):
 
 class GuildCreate(generics.CreateAPIView):
     queryset = Guild.objects.all()
-    serializer_class = GuildSerializer
+    serializer_class = GuildCreateSerializer
+
 
 
 class GuildListView(generics.ListAPIView):
     queryset = Guild.objects.all()
-    serializer_class = GuildSerializer
+    serializer_class = GuildListSerializer
 
 
 class GuildDetail(generics.ListAPIView):
@@ -138,6 +139,25 @@ class PositionView(generics.ListCreateAPIView):
 class RaidListView(generics.ListCreateAPIView):
     queryset = Raid.objects.all()
     serializer_class = RaidSerializer
+
+    def post(self, request):
+        serializer = request.data
+        dd = request.data.get("damage_slots.slot")
+        positiondd = Position.objects.get(id=1)
+        #groupdd = Group.objects.create(slot=dd, position_id=positiondd) # Tworzenie instancji Group dla position_id = 1
+        groups = serializer.get("group_id")
+        print(serializer)
+        return Response("tak")
+
+
+class RaidDetailView(generics.ListAPIView):
+    queryset = Raid.objects.all()
+    serializer_class = RaidDetailSerializer
+
+    def get(self, request, pk):
+        raids = Raid.objects.get(id=pk)
+        serializer = RaidDetailView(raids)
+        return Response(serializer.data)
 
 
 # ----------------------------------------------------------
