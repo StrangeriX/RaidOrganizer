@@ -22,10 +22,10 @@ pipelines:
               # Enforce style consistency across Python projects https://flake8.pycqa.org/en/latest/manpage.html
               - pip install flake8
               #- flake8 . --extend-exclude=dist,build --show-source --statistics
-- pipe: atlassian/heroku-deploy:1.2.1
-  variables:
-    HEROKU_API_KEY: '17559a0e-d16d-4943-8875-e391e1b164c9'
-    HEROKU_APP_NAME: 'raid-organizer'
-    ZIP_FILE: 'heroku.zip'
-    # WAIT: '<boolean>' # Optional.
-    # DEBUG: '<boolean>' # Optional
+              - pipe: atlassian/heroku-deploy:1.2.1
+                variables:
+                  HEROKU_API_KEY: '17559a0e-d16d-4943-8875-e391e1b164c9'
+                  HEROKU_APP_NAME: 'raid-organizer'
+                  ZIP_FILE: 'heroku.zip'
+                  # WAIT: '<boolean>' # Optional.
+                  # DEBUG: '<boolean>' # Optional
