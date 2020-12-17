@@ -15,7 +15,7 @@ pipelines:
             script:
               - if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
               - pip install pytest
-              - git archive --format=tar.gz devel -o organizer-app.tar.gz
+              - git archive --format=tar.gz master -o organizer-app.tar.gz
               #- pytest -v tests/* --junitxml=test-reports/report.xml
             artifacts:
               - courier-app.tar.gz
