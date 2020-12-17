@@ -13,9 +13,9 @@ pipelines:
         script:
           - pip --version
           - pip install -r requirements.txt
-          - python app/manage.py migrate
-          - python app/manage.py makemigrations courier
-          - python app/manage.py migrate
+          - python manage.py migrate
+          - python manage.py makemigrations courier
+          - python manage.py migrate
           - git archive --format=tar.gz master -o organizer-app.tar.gz
         artifacts:
           - organizer-app.tar.gz
