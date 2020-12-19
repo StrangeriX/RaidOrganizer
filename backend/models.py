@@ -20,7 +20,9 @@ class Character(models.Model):
     name = models.CharField(max_length=30, unique=True)
 
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    position = models.OneToOneField(Position, null=True, on_delete=models.SET_NULL)
+    position = models.OneToOneField(
+        Position, null=True, on_delete=models.SET_NULL
+    )
 
 
 class Guild(models.Model):
@@ -57,4 +59,9 @@ class Raid(models.Model):
     date = models.DateField()  # string comment chyba będzie lepszy??
 
     guild_id = models.ForeignKey(Guild, on_delete=models.CASCADE)
-    group_id = models.ForeignKey(Group, null=False,on_delete=models.CASCADE)
+    group_id = models.ForeignKey(Group, null=False, on_delete=models.CASCADE)
+
+
+class UserToGroup(models.Model):
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    group_id = models.ForeignKey(Group, on_delete=models.CASCADE)
