@@ -39,7 +39,7 @@ class UsertToGuildCreateSerializer(serializers.ModelSerializer):
 
 
 class GuildCreateSerializer(serializers.ModelSerializer):
-    user = UsertToGuildCreateSerializer()
+    user = UsertToGuildCreateSerializer(write_only=True)
 
     class Meta:
         model = Guild

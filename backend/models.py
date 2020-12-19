@@ -51,8 +51,6 @@ class UserToGuild(models.Model):
 class Group(models.Model):
     slot = models.PositiveIntegerField()
 
-    position_id = models.ForeignKey(Position, on_delete=models.CASCADE)
-
 
 class Raid(models.Model):
     name = models.CharField(max_length=45)  # not unique?

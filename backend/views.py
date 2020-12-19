@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from rest_framework.response import Response
 from rest_framework import status, permissions
 from rest_framework.views import APIView
+from rest_framework import permissions, viewsets
 
 from .models import *
 from .serializers import *
@@ -52,6 +53,9 @@ class GuildCreate(generics.CreateAPIView):
     queryset = Guild.objects.all()
     serializer_class = GuildCreateSerializer
 
+    def post(self, request):
+        print(request.data)
+        return Response("tak")
 
 
 class GuildListView(generics.ListAPIView):
