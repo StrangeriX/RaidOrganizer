@@ -20,9 +20,7 @@ class Character(models.Model):
     name = models.CharField(max_length=30, unique=True)
 
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    position = models.OneToOneField(
-        Position, null=True, on_delete=models.SET_NULL
-    )
+    position = models.OneToOneField(Position, null=True, on_delete=models.SET_NULL)
 
 
 class Guild(models.Model):
@@ -32,7 +30,7 @@ class Guild(models.Model):
         return self.guild_name
 
 
-class GuildPosiiton(models.Model):
+class GuildPosition(models.Model):
     name = models.CharField(max_length=40, unique=True)
     has_many = models.BooleanField(default=False)
 
@@ -44,22 +42,31 @@ class UserToGuild(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     guild = models.ForeignKey(Guild, on_delete=models.CASCADE)
     guild_position = models.ForeignKey(
-        GuildPosiiton, on_delete=models.SET_NULL, blank=False, null=True
+        GuildPosition, on_delete=models.SET_NULL, blank=False, null=True
     )
+
+
+class Raid(models.Model):
+    name = models.CharField(max_length=45)
+    date = models.DateField(null=True)  # string comment chyba będzie lepszy??
+
+    guild = models.ForeignKey(Guild, on_delete=models.CASCADE)
 
 
 class Group(models.Model):
     slot = models.PositiveIntegerField()
-
-
-class Raid(models.Model):
-    name = models.CharField(max_length=45)  # not unique?
-    date = models.DateField()  # string comment chyba będzie lepszy??
-
-    guild_id = models.ForeignKey(Guild, on_delete=models.CASCADE)
-    group_id = models.ForeignKey(Group, null=False, on_delete=models.CASCADE)
+    TANK = "Tank"
+    HEALER = "Healer"
+    DD = "DD"
+    position_choise = [
+        (TANK, "Tank"),
+        (HEALER, "Healer"),
+        (DD, "DD"),
+    ]
+    position = models.CharField(max_length=6, choices=position_choise, default=DD)
+    raid = models.ForeignKey(Raid, on_delete=models.SET_NULL, null=True, blank=True)
 
 
 class UserToGroup(models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    group_id = models.ForeignKey(Group, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    group = models.ForeignKey(Group, on_delete=models.CASCADE)

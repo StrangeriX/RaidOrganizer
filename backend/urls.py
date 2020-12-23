@@ -1,5 +1,20 @@
-from django.urls import path
-from .views import *
+from django.urls import path, include
+from .views import (
+    UserCreate,
+    UserView,
+    UserDetail,
+    CharacterCreate,
+    CharacterView,
+    GuildCreate,
+    GuildListView,
+    GuildDetail,
+    UserToGuildView,
+    UserToGuildDetail,
+    PositionView,
+    RaidCreateView,
+    RaidDetailView,
+    GroupView,
+)
 
 urlpatterns = [
     path("user/list", UserView.as_view()),
@@ -13,7 +28,8 @@ urlpatterns = [
     path("userto/list", UserToGuildView.as_view()),
     path("userto/<int:pk>", UserToGuildDetail.as_view()),
     path("position", PositionView.as_view()),
-    path("raid", RaidListView.as_view()),
+    path("raid", RaidCreateView.as_view()),
     path("raid/<int:pk>", RaidDetailView.as_view()),
     path("group", GroupView.as_view()),
+    path("auth", include("rest_framework.urls")),
 ]

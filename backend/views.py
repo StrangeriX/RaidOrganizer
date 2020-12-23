@@ -1,14 +1,35 @@
 from django.shortcuts import render
-from rest_framework import generics
+from rest_framework import generics, status, permissions
 from django.views.generic.detail import DetailView
 from django.http import JsonResponse
 from rest_framework.response import Response
-from rest_framework import status, permissions
 from rest_framework.views import APIView
-from rest_framework import permissions, viewsets
 
-from .models import *
-from .serializers import *
+from .models import (
+    Position,
+    Character,
+    Guild,
+    GuildPosition,
+    UserToGuild,
+    Group,
+    Raid,
+    UserToGroup,
+    User,
+)
+from .serializers import (
+    UserSerializer,
+    UserDetailSerializer,
+    CharacterSerializer,
+    UserToGuildSerializer,
+    GuildListSerializer,
+    UsertToGuildCreateSerializer,
+    GuildCreateSerializer,
+    GuildSerializer,
+    PositionSerializer,
+    GroupSerializer,
+    RaidCreateSerializer,
+    RaidDetailSerializer,
+)
 
 # -------------------- USER -----------------------------
 
@@ -16,6 +37,13 @@ from .serializers import *
 class UserCreate(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserDetailSerializer
+
+    def post(self, request):
+        print(request.data)
+        user = User(username=request.data["username"], email=request.data["email"])
+        user.set_password(request.data["password"])
+        user.save()
+        return Response(status=status.HTTP_201_CREATED)
 
 
 class UserView(generics.ListAPIView):
@@ -26,11 +54,28 @@ class UserView(generics.ListAPIView):
 class UserDetail(generics.ListAPIView, generics.UpdateAPIView, generics.DestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserDetailSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, pk):
+
         users = User.objects.get(id=pk)
         serializer = UserDetailSerializer(users)
         return Response(serializer.data)
+
+    def put(self, request, pk):
+        user = User.objects.get(id=pk)
+        print(request.user.is_superuser)
+        if request.user.id != user and not request.user.is_superuser:
+            return Response(
+                "You cant change other users", status=status.HTTP_401_UNAUTHORIZED
+            )
+        else:
+            user = User(
+                id=pk, username=request.data["username"], email=request.data["email"]
+            )
+            user.set_password(request.data["password"])
+            user.save()
+            return Response(status=status.HTTP_201_CREATED)
 
 
 # ---------------------- Character -------------------------------
@@ -52,10 +97,6 @@ class CharacterView(generics.ListAPIView):
 class GuildCreate(generics.CreateAPIView):
     queryset = Guild.objects.all()
     serializer_class = GuildCreateSerializer
-
-    def post(self, request):
-        print(request.data)
-        return Response("tak")
 
 
 class GuildListView(generics.ListAPIView):
@@ -84,9 +125,9 @@ class UserToGuildView(generics.ListCreateAPIView):
     def post(self, request):
         print(request.data)
         guild_position_id = request.data["guild_position"]
-        guild_position = GuildPosiiton.objects.get(id=guild_position_id)
+        guild_position = GuildPosition.objects.get(id=guild_position_id)
         guild_id = request.data["guild"]
-        userID = request.data["user"]
+        user_id = request.data["user"]
         if guild_position.has_many is False:
             user_count = UserToGuild.objects.filter(
                 guild_id=guild_id, guild_position_id=guild_position_id
@@ -97,24 +138,10 @@ class UserToGuildView(generics.ListCreateAPIView):
                     status=status.HTTP_400_BAD_REQUEST,
                 )
         userToGuild = UserToGuild(
-            user_id=userID, guild_id=guild_id, guild_position_id=guild_position_id
+            user_id=user_id, guild_id=guild_id, guild_position_id=guild_position_id
         )
         userToGuild.save()
         return Response("Welcome in guild", status=status.HTTP_200_OK)
-
-    def put(self, request):
-        serializer = UserToGuildSerializer(data=request.data)
-        guildRole = GuildRole.objects.get(name="member")
-        if ():
-            return Response(
-                "There can be only one person here",
-                status=status.HTTP_406_NOT_ACCEPTABLE,
-            )
-        else:
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data, "przeszło")
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserToGuildDetail(
@@ -128,6 +155,8 @@ class UserToGuildDetail(
         serializer = UserToGuildSerializer(connects)
         return Response(serializer.data)
 
+    # do zrobienia put
+
 
 # ----------------------------------------------------------
 
@@ -140,18 +169,32 @@ class PositionView(generics.ListCreateAPIView):
 # ----------------------------------------------------------
 
 
-class RaidListView(generics.ListCreateAPIView):
+class RaidCreateView(generics.CreateAPIView):
     queryset = Raid.objects.all()
-    serializer_class = RaidSerializer
+    serializer_class = RaidCreateSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
-        serializer = request.data
-        dd = request.data.get("damage_slots.slot")
-        positiondd = Position.objects.get(id=1)
-        #groupdd = Group.objects.create(slot=dd, position_id=positiondd) # Tworzenie instancji Group dla position_id = 1
-        groups = serializer.get("group_id")
-        print(serializer)
-        return Response("tak")
+        user = request.user
+        this_user = UserToGuild.objects.get(user_id=user.id)
+        this_user_position = this_user.guild_position.id  # id roli w gildii usera
+        guild = this_user.guild  # id gildii usera
+        if this_user_position == 1 or this_user_position == 2:
+            serializer = request.data
+            raid = Raid(name=serializer["name"], guild_id=guild.id)
+            raid.save()
+            dd = serializer.get("damage_slots")
+            damage_slots = Group(slot=dd, raid=raid, position="DD")
+            damage_slots.save()
+            tank = serializer.get("tank_slots")
+            tank_slots = Group(slot=tank, raid=raid, position="Tank")
+            tank_slots.save()
+            healer = serializer.get("healer_slots")
+            healer_slots = Group(slot=healer, raid=raid, position="Healer")
+            healer_slots.save()
+        else:
+            return Response("Nie masz uprawnień", status=status.HTTP_401_UNAUTHORIZED)
+        return Response(status=status.HTTP_201_CREATED)
 
 
 class RaidDetailView(generics.ListAPIView):
@@ -160,10 +203,17 @@ class RaidDetailView(generics.ListAPIView):
 
     def get(self, request, pk):
         raids = Raid.objects.get(id=pk)
-        serializer = RaidDetailView(raids)
+        serializer = RaidDetailSerializer(raids)
         return Response(serializer.data)
+    def update(self, request):
+        return Response("tak")
 
-
+class RaidUsersView(generics.UpdateAPIView):
+    serializer_class = RaidDetailSerializer
+    def get(self, request, pk):
+        raids = Raid.objects.get(id=pk)
+        serializer = RaidDetailSerializer(raids)
+        return Response(serializer.data)
 # ----------------------------------------------------------
 
 

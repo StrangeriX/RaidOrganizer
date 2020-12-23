@@ -1,11 +1,22 @@
 from rest_framework import serializers
-from .models import *
+
+from .models import (
+    Position,
+    Character,
+    Guild,
+    GuildPosition,
+    UserToGuild,
+    Group,
+    Raid,
+    UserToGroup,
+    User,
+)
 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = "__all__"
+        fields = ("username", "email")
 
 
 class UserDetailSerializer(serializers.ModelSerializer):
@@ -39,11 +50,9 @@ class UsertToGuildCreateSerializer(serializers.ModelSerializer):
 
 
 class GuildCreateSerializer(serializers.ModelSerializer):
-    user = UsertToGuildCreateSerializer(write_only=True)
-
     class Meta:
         model = Guild
-        fields = ("guild_name", "user")
+        fields = "__all__"
 
 
 class GuildSerializer(serializers.ModelSerializer):
@@ -52,7 +61,6 @@ class GuildSerializer(serializers.ModelSerializer):
 
     def get_guild_members(self, request):
         users = UserToGuild.objects.filter(guild_id=request.id)
-        print("2nd print: ", users)
         members = []
         for i in users:
             members.append(i.user.username)
@@ -74,23 +82,22 @@ class PositionSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
-        fields = ["slot"]
+        fields = "__all__"
 
 
-class RaidSerializer(serializers.ModelSerializer):
-    damage_slots = GroupSerializer()
-    tank_slots = GroupSerializer()
-    healer_slots = GroupSerializer()
+class RaidCreateSerializer(serializers.ModelSerializer):
+    damage_slots = serializers.IntegerField()
+    tank_slots = serializers.IntegerField()
+    healer_slots = serializers.IntegerField()
 
     class Meta:
         model = Raid
         fields = (
             "name",
-            "group_id",
-            "date",
             "damage_slots",
             "tank_slots",
             "healer_slots",
@@ -98,6 +105,41 @@ class RaidSerializer(serializers.ModelSerializer):
 
 
 class RaidDetailSerializer(serializers.ModelSerializer):
+    dd_list = serializers.SerializerMethodField()
+    tank_list = serializers.SerializerMethodField()
+    healer_list = serializers.SerializerMethodField()
+
+    def get_dd_list(self, request):
+        groups = Group.objects.filter(raid=request.id)
+        dd_group = groups.get(position="DD")
+        users = UserToGroup.objects.filter(group_id=dd_group)
+        members = []
+        for user in users:
+            member = User.objects.get(id=user.user_id)
+            members.append(member.username)
+        return members
+
+    def get_tank_list(self, request):
+        groups = Group.objects.filter(raid=request.id)
+        dd_group = groups.get(position="Tank")
+        users = UserToGroup.objects.filter(group_id=dd_group)
+        members = []
+        for user in users:
+            member = User.objects.get(id=user.user_id)
+            members.append(member.username)
+        return members
+
+    def get_healer_list(self, request):
+        groups = Group.objects.filter(raid=request.id)
+        dd_group = groups.get(position="Healer")
+        users = UserToGroup.objects.filter(group_id=dd_group)
+        members = []
+        for user in users:
+            member = User.objects.get(id=user.user_id)
+            members.append(member.username)
+        return members
+
     class Meta:
         model = Raid
         fields = "__all__"
+
