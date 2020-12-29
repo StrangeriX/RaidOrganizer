@@ -5,6 +5,7 @@ urlpatterns = [
     path('', index),
     path('guild', index),
     path('create', index),
-    path('guild/1', index)
+    path('guild/1', index),
+    path('register', index),
 
 ]
