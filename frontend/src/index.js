@@ -1,6 +1,6 @@
 import React from 'react';
-import App from "./components/App";
 import { render } from 'react-dom';
+import App from './components/App';
 
-const appDiv = document.getElementById("app");
+const appDiv = document.getElementById('app');
 render(<App />, appDiv);

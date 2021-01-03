@@ -1,18 +1,34 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import React, { Component, memo } from 'react';
+import { Link, withRouter } from 'react-router-dom';
+import withAuthentication from '../../api/withAuthentication';
 
-export default class Login extends Component {
+class Login extends Component {
   state = {
     username: '',
     password: '',
   };
 
   onSubmit = (e) => {
-    e.preventDefaulf();
-    console.log('submit');
+    const { history, setIsAuthenticated } = this.props;
+    e.preventDefault();
+    const { username, password } = this.state;
+    fetch('http://127.0.0.1:8000/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ username, password }),
+      headers: { 'Content-Type': 'application/json' },
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        const { token } = json;
+        localStorage.setItem('token', token);
+        setIsAuthenticated({ isAuthenticated: true });
+        history.push('/home');
+      });
   };
 
-  onChange = (e) => this.setState({ [e.target.name]: e.target.value });
+  onChange = (e) => {
+    this.setState({ [e.target.name]: e.target.value });
+  };
 
   render() {
     const { username, password } = this.state;
@@ -20,7 +36,7 @@ export default class Login extends Component {
       <div className="col-md-6 m-auto">
         <div className="card card-body mt-5">
           <h2 className="text-center">Login</h2>
-          <form onSubmit={this.onSubmit}>
+          <form>
             <div className="form-group">
               <label>Username</label>
               <input
@@ -42,7 +58,7 @@ export default class Login extends Component {
               />
             </div>
             <div className="form-group">
-              <button type="submit" className="btn btn-primary">
+              <button type="submit" className="btn btn-primary" onClick={this.onSubmit}>
                 Login
               </button>
             </div>
@@ -55,3 +71,5 @@ export default class Login extends Component {
     );
   }
 }
+
+export default withRouter(withAuthentication(Login));

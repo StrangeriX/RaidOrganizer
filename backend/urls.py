@@ -1,9 +1,5 @@
 from django.urls import path, include
 from .views import (
-    UserCreate,
-    UserView,
-    UserDetail,
-    CharacterCreate,
     CharacterView,
     GuildCreate,
     GuildListView,
@@ -17,10 +13,6 @@ from .views import (
 )
 
 urlpatterns = [
-    path("user/list", UserView.as_view()),
-    path("user/create", UserCreate.as_view()),
-    path("user/<int:pk>", UserDetail.as_view()),
-    path("char/create", CharacterCreate.as_view()),
     path("char/list", CharacterView.as_view()),
     path("guild/create", GuildCreate.as_view()),
     path("guild/list", GuildListView.as_view()),
@@ -31,5 +23,4 @@ urlpatterns = [
     path("raid", RaidCreateView.as_view()),
     path("raid/<int:pk>", RaidDetailView.as_view()),
     path("group", GroupView.as_view()),
-    path("auth", include("rest_framework.urls")),
 ]

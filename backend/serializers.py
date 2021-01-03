@@ -1,4 +1,6 @@
 from rest_framework import serializers
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
 
 from .models import (
     Position,
@@ -13,22 +15,17 @@ from .models import (
 )
 
 
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ("username", "email")
-
-
-class UserDetailSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ("username", "email", "password")
-
-
 class CharacterSerializer(serializers.ModelSerializer):
+    position_name = serializers.SerializerMethodField()
+
+    def get_position_name(self, request):
+        print("aaaaaaaa", request.position_id)
+        position = Position.objects.get(id=request.position_id)
+        return position.name
+
     class Meta:
         model = Character
-        fields = "__all__"
+        fields = ("name", "user", "position_name")
 
 
 class UserToGuildSerializer(serializers.ModelSerializer):
@@ -80,7 +77,6 @@ class PositionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Position
         fields = "__all__"
-
 
 
 class GroupSerializer(serializers.ModelSerializer):
@@ -141,5 +137,4 @@ class RaidDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Raid
-        fields = "__all__"
-
+        fields = ("id", "name", "dd_list", "tank_list", "healer_list")

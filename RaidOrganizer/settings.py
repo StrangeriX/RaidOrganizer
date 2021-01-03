@@ -39,8 +39,10 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "knox",
     "backend.apps.BackendConfig",
     "frontend.apps.FrontendConfig",
+    "accounts",
     "corsheaders",
 ]
 
@@ -133,3 +135,8 @@ STATICFILE_DIRS = [
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES':
+    ('knox.auth.TokenAuthentication',)
+}

@@ -1,9 +1,6 @@
-from django.shortcuts import render
 from rest_framework import generics, status, permissions
-from django.views.generic.detail import DetailView
-from django.http import JsonResponse
 from rest_framework.response import Response
-from rest_framework.views import APIView
+
 
 from .models import (
     Position,
@@ -17,8 +14,6 @@ from .models import (
     User,
 )
 from .serializers import (
-    UserSerializer,
-    UserDetailSerializer,
     CharacterSerializer,
     UserToGuildSerializer,
     GuildListSerializer,
@@ -31,64 +26,16 @@ from .serializers import (
     RaidDetailSerializer,
 )
 
+
 # -------------------- USER -----------------------------
-
-
-class UserCreate(generics.CreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserDetailSerializer
-
-    def post(self, request):
-        print(request.data)
-        user = User(username=request.data["username"], email=request.data["email"])
-        user.set_password(request.data["password"])
-        user.save()
-        return Response(status=status.HTTP_201_CREATED)
-
-
-class UserView(generics.ListAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-
-class UserDetail(generics.ListAPIView, generics.UpdateAPIView, generics.DestroyAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserDetailSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get(self, request, pk):
-
-        users = User.objects.get(id=pk)
-        serializer = UserDetailSerializer(users)
-        return Response(serializer.data)
-
-    def put(self, request, pk):
-        user = User.objects.get(id=pk)
-        print(request.user.is_superuser)
-        if request.user.id != user and not request.user.is_superuser:
-            return Response(
-                "You cant change other users", status=status.HTTP_401_UNAUTHORIZED
-            )
-        else:
-            user = User(
-                id=pk, username=request.data["username"], email=request.data["email"]
-            )
-            user.set_password(request.data["password"])
-            user.save()
-            return Response(status=status.HTTP_201_CREATED)
-
 
 # ---------------------- Character -------------------------------
 
 
-class CharacterCreate(generics.CreateAPIView):
+class CharacterView(generics.ListCreateAPIView):
     queryset = Character.objects.all()
     serializer_class = CharacterSerializer
 
-
-class CharacterView(generics.ListAPIView):
-    queryset = Character.objects.all()
-    serializer_class = CharacterSerializer
 
 
 # --------------------- Guild -----------------------------
@@ -172,7 +119,6 @@ class PositionView(generics.ListCreateAPIView):
 class RaidCreateView(generics.CreateAPIView):
     queryset = Raid.objects.all()
     serializer_class = RaidCreateSerializer
-    permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
         user = request.user
@@ -205,15 +151,20 @@ class RaidDetailView(generics.ListAPIView):
         raids = Raid.objects.get(id=pk)
         serializer = RaidDetailSerializer(raids)
         return Response(serializer.data)
+
     def update(self, request):
         return Response("tak")
 
+
 class RaidUsersView(generics.UpdateAPIView):
     serializer_class = RaidDetailSerializer
+
     def get(self, request, pk):
         raids = Raid.objects.get(id=pk)
         serializer = RaidDetailSerializer(raids)
         return Response(serializer.data)
+
+
 # ----------------------------------------------------------
 
 

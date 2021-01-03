@@ -1,6 +1,6 @@
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect, useState } from 'react';
 
-const Request = ({ url, method = "GET", children }) => {
+const Request = ({ url, method = 'GET', children }) => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState(null);
 

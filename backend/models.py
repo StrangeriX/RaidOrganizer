@@ -1,25 +1,24 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-# Create your models here.
+TANK = "Tank"
+HEALER = "Healer"
+DD = "DD"
+position_choise = [
+    (TANK, "Tank"),
+    (HEALER, "Healer"),
+    (DD, "DD"),
+]
 
 
 class Position(models.Model):
-    TANK = "Tank"
-    HEALER = "Healer"
-    DD = "DD"
-    position_choise = [
-        (TANK, "Tank"),
-        (HEALER, "Healer"),
-        (DD, "DD"),
-    ]
     name = models.CharField(max_length=6, choices=position_choise, default=DD)
 
 
 class Character(models.Model):
     name = models.CharField(max_length=30, unique=True)
 
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     position = models.OneToOneField(Position, null=True, on_delete=models.SET_NULL)
 
 
@@ -52,17 +51,13 @@ class Raid(models.Model):
 
     guild = models.ForeignKey(Guild, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return (self.name+" "+self.guild.guild_name)
+
 
 class Group(models.Model):
     slot = models.PositiveIntegerField()
-    TANK = "Tank"
-    HEALER = "Healer"
-    DD = "DD"
-    position_choise = [
-        (TANK, "Tank"),
-        (HEALER, "Healer"),
-        (DD, "DD"),
-    ]
+
     position = models.CharField(max_length=6, choices=position_choise, default=DD)
     raid = models.ForeignKey(Raid, on_delete=models.SET_NULL, null=True, blank=True)
 
