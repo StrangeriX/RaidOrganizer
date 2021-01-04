@@ -8,7 +8,7 @@ const Authenticated = ({ children }) => {
 
   useEffect(() => {
     if (!isAuthenticated) {
-      history.push('/login');
+      history.push('/home');
     }
   }, []);
   return isAuthenticated && children;

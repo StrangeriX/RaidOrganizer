@@ -1,7 +1,9 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import withAuthentication from '../../api/withAuthentication';
 
-export default class Register extends Component {
+class Register extends Component {
   state = {
     username: '',
     email: '',
@@ -10,8 +12,30 @@ export default class Register extends Component {
   };
 
   onSubmit = (e) => {
-    e.preventDefaulf();
-    console.log('submit');
+    const { history, setIsAuthenticated } = this.props;
+    e.preventDefault();
+    const { username, email, password } = this.state;
+
+    if (this.password === this.passwordConfirm) {
+      console.log('Good passwords');
+      // fetch
+      fetch('http://127.0.0.1:8000/auth/register', {
+        method: 'POST',
+        body: JSON.stringify({ username, email, password }),
+        headers: { 'Content-Type': 'application/json' },
+      })
+        .then((response) => response.json())
+        .then((json) => {
+          const { token } = json;
+          localStorage.setItem('token', token);
+          localStorage.setItem('username', username);
+          setIsAuthenticated({ isAuthenticated: true });
+          history.push('/home');
+        });
+    } else {
+      // alert
+      console.log('Bad confirm pasword');
+    }
   };
 
   onChange = (e) => this.setState({ [e.target.name]: e.target.value });
@@ -22,7 +46,7 @@ export default class Register extends Component {
       <div className="col-md-6 m-auto">
         <div className="card card-body mt-5">
           <h2 className="text-center">Register</h2>
-          <form onSubmit={this.onSubmit}>
+          <form>
             <div className="form-group">
               <label>Username</label>
               <input
@@ -64,7 +88,7 @@ export default class Register extends Component {
               />
             </div>
             <div className="form-group">
-              <button type="submit" className="btn btn-primary">
+              <button type="submit" className="btn btn-primary" onClick={this.onSubmit}>
                 Register
               </button>
             </div>
@@ -77,3 +101,5 @@ export default class Register extends Component {
     );
   }
 }
+
+export default withAuthentication(Register);

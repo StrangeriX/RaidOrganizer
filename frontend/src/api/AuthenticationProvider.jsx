@@ -6,11 +6,27 @@ export const AuthenticationContext = createContext({
 
 export const AuthenticationDispatchContext = createContext(null);
 
+const logoutRequest = () => {
+  const token = localStorage.getItem('token');
+  fetch('http://127.0.0.1:8000/auth/logout', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${token}`,
+    },
+  }).then((response) => response.json());
+};
+
 export const useIsAuthenticated = () => {
   const setIsAuthenticated = useContext(AuthenticationDispatchContext);
   const { isAuthenticated } = useContext(AuthenticationContext);
-
-  return { isAuthenticated, setIsAuthenticated };
+  const logout = () => {
+    setIsAuthenticated({ isAuthenticated: false });
+    logoutRequest();
+    localStorage.removeItem('token');
+    localStorage.removeItem('username');
+  };
+  return { isAuthenticated, setIsAuthenticated, logout };
 };
 
 const AuthenticationProvider = ({ children }) => {

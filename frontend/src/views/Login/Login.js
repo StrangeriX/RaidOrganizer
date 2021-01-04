@@ -1,4 +1,5 @@
-import React, { Component, memo } from 'react';
+/* eslint-disable jsx-a11y/label-has-associated-control */
+import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import withAuthentication from '../../api/withAuthentication';
 
@@ -17,7 +18,13 @@ class Login extends Component {
       body: JSON.stringify({ username, password }),
       headers: { 'Content-Type': 'application/json' },
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (response.status >= 400 && response.status < 600) {
+          throw new Error('Bad response');
+        }
+        localStorage.setItem('username', username);
+        return response.json();
+      })
       .then((json) => {
         const { token } = json;
         localStorage.setItem('token', token);
@@ -46,6 +53,7 @@ class Login extends Component {
                 onChange={this.onChange}
                 value={username}
               />
+              <span id="username-error" />
             </div>
             <div className="form-group">
               <label>Password</label>
@@ -63,7 +71,7 @@ class Login extends Component {
               </button>
             </div>
             <p>
-              Don't have a account? <Link to="/register">Register</Link>
+              Don&apos;t have a account? <Link to="/register">Register</Link>
             </p>
           </form>
         </div>
