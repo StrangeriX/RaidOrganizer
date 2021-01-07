@@ -17,15 +17,26 @@ from .models import (
 
 class CharacterSerializer(serializers.ModelSerializer):
     position_name = serializers.SerializerMethodField()
+    username = serializers.SerializerMethodField()
+
+    def get_username(self, request):
+        user = request.user
+        return user.username
 
     def get_position_name(self, request):
-        print("aaaaaaaa", request.position_id)
         position = Position.objects.get(id=request.position_id)
         return position.name
 
     class Meta:
         model = Character
-        fields = ("name", "user", "position_name")
+        fields = ("id", "name", "user", "username", "position_name")
+
+
+class UserCharacterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Character
+        fields = "__all__"
+
 
 
 class UserToGuildSerializer(serializers.ModelSerializer):
@@ -54,7 +65,15 @@ class GuildCreateSerializer(serializers.ModelSerializer):
 
 class GuildSerializer(serializers.ModelSerializer):
     guild_master_name = serializers.SerializerMethodField()
+    guild_members_count = serializers.SerializerMethodField()
     guild_members = serializers.SerializerMethodField()
+
+    def get_guild_members_count(self, request):
+        users = UserToGuild.objects.filter(guild_id=request.id)
+        count = 0
+        for i in users:
+            count += 1
+        return count
 
     def get_guild_members(self, request):
         users = UserToGuild.objects.filter(guild_id=request.id)
@@ -64,13 +83,23 @@ class GuildSerializer(serializers.ModelSerializer):
         return members
 
     def get_guild_master_name(self, request):
-        user = UserToGuild.objects.filter(guild_position_id=1).values()
-        user_id = user[0].get("user_id")
-        return User.objects.get(id=user_id).username
+        users = UserToGuild.objects.filter(guild_id=request.id)
+        for i in users:
+            user = UserToGuild.objects.get(id=i.id)
+            if user.guild_position_id == 1:
+                guild_master = user.user_id
+            name = User.objects.filter(id=guild_master)
+            return name[0].username
 
     class Meta:
         model = Guild
-        fields = ("guild_name", "guild_master_name", "guild_members")
+        fields = (
+            "id",
+            "guild_name",
+            "guild_master_name",
+            "guild_members_count",
+            "guild_members",
+        )
 
 
 class PositionSerializer(serializers.ModelSerializer):

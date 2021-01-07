@@ -2,6 +2,7 @@ import React, { memo } from 'react';
 import { Link } from 'react-router-dom';
 
 import { useIsAuthenticated } from '../../api/AuthenticationProvider';
+import Sidebar from '../Sidebar/Sidebar';
 
 function GuestLink() {
   return (
@@ -22,43 +23,25 @@ function GuestLink() {
 
 function Header() {
   const username = localStorage.getItem('username');
-  const { isAuthenticated, logout } = useIsAuthenticated();
+  const { isAuthenticated } = useIsAuthenticated();
   return (
     <nav className="navbar navbar-expand-sm navbar-light bg-light">
       <div className="container">
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-toggle="collapse"
-          data-target="#navbarToggler"
-          aria-controls="navbarToggler"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span className="navbar-toggler-icon" />
-        </button>
-        <div className="navbar-brand">
-          <Link to="/" className="nav-link">
-            Raid Organizer
-          </Link>
+        <div className="col-2">
+          <Sidebar />
+        </div>
+        <div className="navbar-brand col-5">
+          <h3>Raid Organizer</h3>
+
         </div>
 
-        <div className="collapse navbar-collapse" id="navbarToggler">
+        <div className="" id="navbarToggler">
           {!isAuthenticated ? (
             <GuestLink />
           ) : (
             <ul className="navbar-nav ml-auto mt-2 mt-lg-0">
-              <li className="nav-item">
+              <li className="nav-item ">
                 <span>Witaj {username}</span>
-              </li>
-              <li className="nav-item">
-                <button
-                  type="button"
-                  onClick={logout}
-                  className="nav-link btn btn-info btn-sm text-light"
-                >
-                  logout
-                </button>
               </li>
             </ul>
           )}

@@ -10,10 +10,14 @@ from .views import (
     RaidCreateView,
     RaidDetailView,
     GroupView,
+    UserCharacterView,
+    CreateCharacter,
 )
 
 urlpatterns = [
-    path("char/list", CharacterView.as_view()),
+    path("char/<str:username>", UserCharacterView.as_view()),
+    path("char/delete/<int:pk>", CharacterView.as_view()),
+    path("char/create", CreateCharacter.as_view()),
     path("guild/create", GuildCreate.as_view()),
     path("guild/list", GuildListView.as_view()),
     path("guild/<int:pk>", GuildDetail.as_view()),

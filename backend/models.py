@@ -19,7 +19,7 @@ class Character(models.Model):
     name = models.CharField(max_length=30, unique=True)
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    position = models.OneToOneField(Position, null=True, on_delete=models.SET_NULL)
+    position = models.ForeignKey(Position, null=True, on_delete=models.SET_NULL)
 
 
 class Guild(models.Model):

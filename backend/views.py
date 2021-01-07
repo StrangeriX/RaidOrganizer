@@ -24,31 +24,42 @@ from .serializers import (
     GroupSerializer,
     RaidCreateSerializer,
     RaidDetailSerializer,
+    UserCharacterSerializer,
 )
 
 
-# -------------------- USER -----------------------------
-
 # ---------------------- Character -------------------------------
 
-
-class CharacterView(generics.ListCreateAPIView):
+class CreateCharacter(generics.ListAPIView):
     queryset = Character.objects.all()
     serializer_class = CharacterSerializer
 
 
+# destroying and updating characters
+class CharacterView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Character.objects.all()
+    serializer_class = CharacterSerializer
+
+
+# geting list of characters by username
+class UserCharacterView(generics.ListAPIView):
+    serializer_class = CharacterSerializer
+
+    def get_queryset(self):
+        username = self.kwargs['username']
+        return Character.objects.filter(user__username=username)
+
 
 # --------------------- Guild -----------------------------
 
-
-class GuildCreate(generics.CreateAPIView):
+class GuildCreate(generics.ListAPIView):
     queryset = Guild.objects.all()
     serializer_class = GuildCreateSerializer
 
 
 class GuildListView(generics.ListAPIView):
     queryset = Guild.objects.all()
-    serializer_class = GuildListSerializer
+    serializer_class = GuildSerializer
 
 
 class GuildDetail(generics.ListAPIView):

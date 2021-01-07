@@ -5,8 +5,8 @@ const { default: merge } = require('webpack-merge');
 const path = require('path');
 const common = require('./webpack.config');
 
-module.exports = (env) => {
-  return merge(common(env), {
+module.exports = (env) =>
+  merge(common(env), {
     mode: 'development',
     cache: false,
     devtool: 'inline-source-map',
@@ -36,4 +36,3 @@ module.exports = (env) => {
       hot: true,
     },
   });
-};
