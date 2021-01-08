@@ -4,5 +4,6 @@
     "python.linting.flake8Enabled": true,
     "python.linting.pylintEnabled": false,
     "python.linter": "Flake8",
-    "python.formatting.provider": "black"
+    "python.formatting.provider": "black",
+    "python.pythonPath": "e:\\PLIKI\\RaidOrganizer\\RaidOrganizer\\env\\Scripts\\python.exe"
 }
