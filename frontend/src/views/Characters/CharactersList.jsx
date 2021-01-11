@@ -1,17 +1,8 @@
 import React, { memo } from 'react';
-import { IoIosAddCircleOutline } from 'react-icons/io';
 import { AiFillDelete } from 'react-icons/ai';
 import Request from '../../api/Request';
 import Spinner from '../../components/common/Spinner/Spinner';
-
-// const onDeleteClick = (id, callback) => () => {
-//   fetch(`http://localhost:8000/api/char/delete/${id}`, {
-//     method: 'DELETE',
-//   }).then((res) => {
-//     callback();
-//     return res.text();
-//   });
-// };
+import CreateCharacterModal from './CreateCharacterModal/CreateCharacterModal';
 
 const CharactersList = ({ characters, refetch }) => {
   const handleDelete = (mutate) => () => {
@@ -27,11 +18,7 @@ const CharactersList = ({ characters, refetch }) => {
             <th>Name</th>
             <th>Position</th>
             <th>
-              <div className="menu-bars">
-                <button type="button" className="btn btn-success">
-                  <IoIosAddCircleOutline />
-                </button>
-              </div>
+              <CreateCharacterModal />
             </th>
           </tr>
         </thead>

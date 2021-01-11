@@ -31,8 +31,9 @@ function Header() {
           <Sidebar />
         </div>
         <div className="navbar-brand col-5">
-          <h3>Raid Organizer</h3>
-
+          <Link to="/home" style={{ color: '#000' }}>
+            <h3>Raid Organizer</h3>
+          </Link>
         </div>
 
         <div className="" id="navbarToggler">

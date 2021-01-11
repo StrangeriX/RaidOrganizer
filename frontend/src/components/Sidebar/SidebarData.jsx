@@ -6,7 +6,7 @@ export const SidebarData = [
   },
   {
     title: 'Guilds',
-    path: '/guild',
+    path: '/guilds',
     cName: 'nav-text',
   },
 ];

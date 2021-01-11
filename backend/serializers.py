@@ -14,8 +14,12 @@ from .models import (
     User,
 )
 
-
 class CharacterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Character
+        fields = "__all__"
+
+class UserCharacterSerializer(serializers.ModelSerializer):
     position_name = serializers.SerializerMethodField()
     username = serializers.SerializerMethodField()
 
@@ -32,17 +36,8 @@ class CharacterSerializer(serializers.ModelSerializer):
         fields = ("id", "name", "user", "username", "position_name")
 
 
-class UserCharacterSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Character
-        fields = "__all__"
 
 
-
-class UserToGuildSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserToGuild
-        fields = "__all__"
 
 
 class GuildListSerializer(serializers.ModelSerializer):
@@ -58,6 +53,8 @@ class UsertToGuildCreateSerializer(serializers.ModelSerializer):
 
 
 class GuildCreateSerializer(serializers.ModelSerializer):
+    user_name = serializers.CharField()
+
     class Meta:
         model = Guild
         fields = "__all__"
@@ -67,6 +64,15 @@ class GuildSerializer(serializers.ModelSerializer):
     guild_master_name = serializers.SerializerMethodField()
     guild_members_count = serializers.SerializerMethodField()
     guild_members = serializers.SerializerMethodField()
+    raids = serializers.SerializerMethodField()
+
+
+    def get_raids(self, request):
+        raid = Raid.objects.filter(guild=request.id)
+        raids = []
+        for i in raid:
+            raids.append([i.name, i.id])
+        return raids
 
     def get_guild_members_count(self, request):
         users = UserToGuild.objects.filter(guild_id=request.id)
@@ -76,10 +82,10 @@ class GuildSerializer(serializers.ModelSerializer):
         return count
 
     def get_guild_members(self, request):
-        users = UserToGuild.objects.filter(guild_id=request.id)
+        users = UserToGuild.objects.filter(guild_id=request.id).order_by('guild_position')
         members = []
         for i in users:
-            members.append(i.user.username)
+            members.append([i.user.username, i.guild_position.name])
         return members
 
     def get_guild_master_name(self, request):
@@ -99,8 +105,18 @@ class GuildSerializer(serializers.ModelSerializer):
             "guild_master_name",
             "guild_members_count",
             "guild_members",
+            "raids",
         )
 
+
+class UserToGuildSerializer(serializers.ModelSerializer):
+    guild_name = serializers.SerializerMethodField()
+    def get_guild_name(self, request):
+        name = request.guild
+        return name.guild_name
+    class Meta:
+        model = UserToGuild
+        fields = "__all__"
 
 class PositionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -166,4 +182,4 @@ class RaidDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Raid
-        fields = ("id", "name", "dd_list", "tank_list", "healer_list")
+        fields = ("id", "guild", "name", "dd_list", "tank_list", "healer_list")

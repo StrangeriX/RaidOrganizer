@@ -1,5 +1,7 @@
-Character add/update
+Character add/update ?? problem z backendem
 Guild View for user
 Join Guild
 
-venv, python 3.6.12, requirements
+Omówić:
+    niezalogowani są pchani na home
+    provider isInGuild?

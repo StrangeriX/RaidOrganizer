@@ -3,6 +3,7 @@ import withAuthentication from '../../api/withAuthentication';
 import Tabs from '../../components/common/Tabs/Tabs';
 import Characters from '../Characters/Characters';
 import GuildList from '../Guilds/Guilds';
+import UserGuilds from '../Guilds/UserGuilds/UserGuilds';
 import './Home.css';
 
 function Home() {
@@ -33,7 +34,7 @@ function Home() {
         elements={[
           <div>
             <h3 className="text-center">Guilds tab</h3>
-            <GuildList />
+            <UserGuilds />
           </div>,
           <div>
             <h3 className="text-center">Chatacters tab</h3>

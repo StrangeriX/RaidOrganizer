@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import Request from '../../api/Request';
 import withAuthentication from '../../api/withAuthentication';
+import Spinner from '../../components/common/Spinner/Spinner';
 import CharactersList from './CharactersList';
 
 class Guild extends PureComponent {
@@ -10,9 +11,8 @@ class Guild extends PureComponent {
       <Request url={`http://127.0.0.1:8000/api/char/${username}`}>
         {({ data, loading, refetch }) => {
           if (loading) {
-            return <span>loading</span>;
+            return <Spinner />;
           }
-          console.log({ data });
           return <CharactersList characters={data} refetch={refetch} />;
         }}
       </Request>

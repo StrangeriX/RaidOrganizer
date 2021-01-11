@@ -14,7 +14,7 @@ from .models import (
     User,
 )
 from .serializers import (
-    CharacterSerializer,
+    UserCharacterSerializer,
     UserToGuildSerializer,
     GuildListSerializer,
     UsertToGuildCreateSerializer,
@@ -25,25 +25,26 @@ from .serializers import (
     RaidCreateSerializer,
     RaidDetailSerializer,
     UserCharacterSerializer,
+    CharacterSerializer,
 )
 
 
 # ---------------------- Character -------------------------------
 
-class CreateCharacter(generics.ListAPIView):
+class CharactersView(generics.ListCreateAPIView):
     queryset = Character.objects.all()
     serializer_class = CharacterSerializer
-
 
 # destroying and updating characters
-class CharacterView(generics.RetrieveUpdateDestroyAPIView):
+class CharacterRetriveView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Character.objects.all()
     serializer_class = CharacterSerializer
+
 
 
 # geting list of characters by username
 class UserCharacterView(generics.ListAPIView):
-    serializer_class = CharacterSerializer
+    serializer_class = UserCharacterSerializer
 
     def get_queryset(self):
         username = self.kwargs['username']
@@ -52,9 +53,21 @@ class UserCharacterView(generics.ListAPIView):
 
 # --------------------- Guild -----------------------------
 
-class GuildCreate(generics.ListAPIView):
+class GuildCreate(generics.CreateAPIView):
     queryset = Guild.objects.all()
     serializer_class = GuildCreateSerializer
+
+    def post(self, request):
+        data = request.data
+        print(data["user_name"])
+        user = User.objects.get(username=data["user_name"])
+        print(user)
+        guild = Guild(guild_name=data["guild_name"])
+        guild.save()
+        userto = UserToGuild(user=user, guild=guild, guild_position_id=1)
+        userto.save()
+        return Response(status=status.HTTP_201_CREATED)
+
 
 
 class GuildListView(generics.ListAPIView):
@@ -70,6 +83,15 @@ class GuildDetail(generics.ListAPIView):
         guilds = Guild.objects.get(id=pk)
         serializer = GuildSerializer(guilds)
         return Response(serializer.data)
+
+    def delete(self, request, pk):
+        guild = Guild.objects.get(id=pk)
+        links = UserToGuild.objects.filter(guild=guild)
+        for i in links:
+            i.delete()
+        guild.delete()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 # -------------------USER TO GUILD---------------------------------------
@@ -106,16 +128,21 @@ class UserToGuildDetail(
     generics.ListAPIView, generics.DestroyAPIView, generics.UpdateAPIView
 ):
     queryset = UserToGuild.objects.all()
-    serializer_class = UserToGuildSerializer
+    serializer_class = UsertToGuildCreateSerializer
 
     def get(self, request, pk):
         connects = UserToGuild.objects.get(id=pk)
         serializer = UserToGuildSerializer(connects)
         return Response(serializer.data)
 
-    # do zrobienia put
+    # do zrobienia post i put
 
 
+class UserToGuildListView(generics.ListAPIView):
+    serializer_class = UserToGuildSerializer
+    def get_queryset(self):
+        user = self.kwargs['username']
+        return UserToGuild.objects.filter(user__username=user)
 # ----------------------------------------------------------
 
 
@@ -166,14 +193,12 @@ class RaidDetailView(generics.ListAPIView):
     def update(self, request):
         return Response("tak")
 
-
-class RaidUsersView(generics.UpdateAPIView):
+class RaidListView(generics.ListAPIView):
     serializer_class = RaidDetailSerializer
-
-    def get(self, request, pk):
-        raids = Raid.objects.get(id=pk)
-        serializer = RaidDetailSerializer(raids)
-        return Response(serializer.data)
+    def get_queryset(self):
+        id = self.kwargs["guildid"]
+        return Raid.objects.filter(guild=id)
+    
 
 
 # ----------------------------------------------------------
