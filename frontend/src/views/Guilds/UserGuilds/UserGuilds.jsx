@@ -35,6 +35,7 @@ function UserGuilds() {
                         Info
                       </Link>
                     </td>
+                    <td>{date.guild_position_name}</td>
                   </tr>
                 ))}
               </tbody>

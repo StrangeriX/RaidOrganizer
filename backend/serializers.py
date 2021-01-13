@@ -14,10 +14,12 @@ from .models import (
     User,
 )
 
+
 class CharacterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Character
-        fields = "__all__"
+        fields = ("name", "position")
+
 
 class UserCharacterSerializer(serializers.ModelSerializer):
     position_name = serializers.SerializerMethodField()
@@ -111,12 +113,20 @@ class GuildSerializer(serializers.ModelSerializer):
 
 class UserToGuildSerializer(serializers.ModelSerializer):
     guild_name = serializers.SerializerMethodField()
+    guild_position_name = serializers.SerializerMethodField()
+
+
     def get_guild_name(self, request):
         name = request.guild
         return name.guild_name
+
+    def get_guild_position_name(self, request):
+        position = request.guild_position
+        return position.name
+
     class Meta:
         model = UserToGuild
-        fields = "__all__"
+        fields = ("id", "guild_name", "user", "guild", "guild_position", "guild_position_name")
 
 class PositionSerializer(serializers.ModelSerializer):
     class Meta:

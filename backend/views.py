@@ -69,7 +69,6 @@ class GuildCreate(generics.CreateAPIView):
         return Response(status=status.HTTP_201_CREATED)
 
 
-
 class GuildListView(generics.ListAPIView):
     queryset = Guild.objects.all()
     serializer_class = GuildSerializer
@@ -104,6 +103,11 @@ class UserToGuildView(generics.ListCreateAPIView):
 
     def post(self, request):
         print(request.data)
+        user = request.data["user"]
+        connects = UserToGuild.objects.filter(user=user)
+        print(connects)
+        if (connects.exists()):
+            return Response("już jest")
         guild_position_id = request.data["guild_position"]
         guild_position = GuildPosition.objects.get(id=guild_position_id)
         guild_id = request.data["guild"]
@@ -123,26 +127,30 @@ class UserToGuildView(generics.ListCreateAPIView):
         userToGuild.save()
         return Response("Welcome in guild", status=status.HTTP_200_OK)
 
-
 class UserToGuildDetail(
-    generics.ListAPIView, generics.DestroyAPIView, generics.UpdateAPIView
+    generics.ListCreateAPIView, generics.DestroyAPIView, generics.UpdateAPIView
 ):
     queryset = UserToGuild.objects.all()
     serializer_class = UsertToGuildCreateSerializer
 
+    
     def get(self, request, pk):
+        print(pk)
         connects = UserToGuild.objects.get(id=pk)
         serializer = UserToGuildSerializer(connects)
         return Response(serializer.data)
 
-    # do zrobienia post i put
+    def post(self, request, *args, **kwargs):
+        return Response("tak")
 
 
 class UserToGuildListView(generics.ListAPIView):
     serializer_class = UserToGuildSerializer
+    queryset = UserToGuild.objects.all()
     def get_queryset(self):
         user = self.kwargs['username']
-        return UserToGuild.objects.filter(user__username=user)
+        return super().get_queryset().filter(user__username=user).order_by("guild_position")
+
 # ----------------------------------------------------------
 
 

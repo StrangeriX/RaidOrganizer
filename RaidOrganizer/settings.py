@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     "rest_framework",
     "knox",
     "backend.apps.BackendConfig",
-    "frontend.apps.FrontendConfig",
     "accounts",
     "corsheaders",
 ]
