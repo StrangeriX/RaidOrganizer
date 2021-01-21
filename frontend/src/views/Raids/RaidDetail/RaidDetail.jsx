@@ -1,22 +1,119 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Request from '../../../api/Request';
 import GoBack from '../../../components/common/GoBack/GoBack';
 import Spinner from '../../../components/common/Spinner/Spinner';
 
 function RaidDetail(props) {
+  const [isInRoster, setIsInRoster] = useState(false);
+  const handleJoin = (mutate, refetch, position) => () => {
+    mutate({
+      position_id: position,
+    }).then(() => {
+      refetch();
+    });
+  };
+  const handleLeaveRaid = (mutate, refetch) => () => {
+    mutate().then(() => {
+      refetch();
+    });
+  };
+
   const { raidid } = props.match.params;
   const username = localStorage.getItem('username');
   return (
     <div className="col-md-10 m-auto">
       <Request url={`http://127.0.0.1:8000/api/raid/${raidid}`}>
-        {({ data, loading }) => {
+        {({ data, loading, refetch }) => {
           if (loading) return <Spinner />;
+          setIsInRoster(false);
           return (
             <div>
               <div className="card card-body md-12">
                 <h3 className="text-center">{data?.name}</h3>
-                <div>
+                <div className="row">
                   {/* <Request url={`http://127.0.0.1:8000/api/raid/${raidid}`} method="PUT"></Request> Do zrobienia */}
+                  {!data?.tank_list.includes(username) && (
+                    <Request
+                      url={`http://127.0.0.1:8000/api/usertogroup/mutate/${raidid}/${username}`}
+                      method="POST"
+                    >
+                      {({ mutate, loading: isJoinig }) => {
+                        if (isJoinig) return <Spinner />;
+                        const position = '2';
+                        setIsInRoster(true);
+                        return (
+                          <button
+                            type="button"
+                            className="btn btn-info"
+                            onClick={handleJoin(mutate, refetch, position)}
+                          >
+                            join tank
+                          </button>
+                        );
+                      }}
+                    </Request>
+                  )}
+                  {!data?.healer_list.includes(username) && (
+                    <Request
+                      url={`http://127.0.0.1:8000/api/usertogroup/mutate/${raidid}/${username}`}
+                      method="POST"
+                    >
+                      {({ mutate, loading: isJoinig }) => {
+                        if (isJoinig) return <Spinner />;
+                        const position = '3';
+                        setIsInRoster(true);
+                        return (
+                          <button
+                            type="button"
+                            className="btn btn-info"
+                            onClick={handleJoin(mutate, refetch, position)}
+                          >
+                            join Healer
+                          </button>
+                        );
+                      }}
+                    </Request>
+                  )}
+                  {!data?.dd_list.includes(username) && (
+                    <Request
+                      url={`http://127.0.0.1:8000/api/usertogroup/mutate/${raidid}/${username}`}
+                      method="POST"
+                    >
+                      {({ mutate, loading: isJoinig }) => {
+                        if (isJoinig) return <Spinner />;
+                        const position = '1';
+                        setIsInRoster(true);
+                        return (
+                          <button
+                            type="button"
+                            className="btn btn-info"
+                            onClick={handleJoin(mutate, refetch, position)}
+                          >
+                            join DD
+                          </button>
+                        );
+                      }}
+                    </Request>
+                  )}
+                  <div className="col offset-md-4">
+                    <Request
+                      url={`http://127.0.0.1:8000/api/usertogroup/mutate/${raidid}/${username}`}
+                      method="DELETE"
+                    >
+                      {({ mutate, loading: isLeavingRaid }) => {
+                        if (isLeavingRaid) return <Spinner />;
+                        return (
+                          <button
+                            type="button"
+                            className="btn btn-warning"
+                            onChange={handleLeaveRaid(mutate, refetch)}
+                          >
+                            Leave Raid
+                          </button>
+                        );
+                      }}
+                    </Request>
+                  </div>
                 </div>
               </div>
               <div className="col-md-8 m-auto">

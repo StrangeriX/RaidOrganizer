@@ -47,7 +47,6 @@ class UserToGuild(models.Model):
 
 class Raid(models.Model):
     name = models.CharField(max_length=45)
-    date = models.DateField()
     guild = models.ForeignKey(Guild, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -57,7 +56,7 @@ class Raid(models.Model):
 class Group(models.Model):
     slot = models.PositiveIntegerField()
 
-    position = models.CharField(max_length=6, choices=position_choise, default=DD)
+    position = models.ForeignKey(Position, on_delete=models.CASCADE, null=True)
     raid = models.ForeignKey(Raid, on_delete=models.SET_NULL, null=True, blank=True)
 
 

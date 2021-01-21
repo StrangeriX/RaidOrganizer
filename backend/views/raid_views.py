@@ -21,7 +21,7 @@ from backend.serializers import (
     GuildCreateSerializer,
     GuildSerializer,
     PositionSerializer,
-    GroupSerializer,
+    UserToGroupSerializer,
     RaidCreateSerializer,
     RaidDetailSerializer,
     UserCharacterSerializer,
@@ -34,7 +34,6 @@ class RaidCreateView(generics.CreateAPIView):
     serializer_class = RaidCreateSerializer
 
     def post(self, request):
-        print(request.data)
         serializer = request.data
         user = User.objects.get(username=serializer["user"])
         this_user = UserToGuild.objects.get(user=user, guild_id=serializer["guild_id"])
@@ -45,13 +44,16 @@ class RaidCreateView(generics.CreateAPIView):
             raid = Raid(name=serializer["name"], guild_id=guild.id)
             raid.save()
             dd = serializer.get("damage_slots")
-            damage_slots = Group(slot=dd, raid=raid, position="DD")
+            position = Position.objects.get(id=1)
+            damage_slots = Group(slot=dd, raid=raid, position=position)
             damage_slots.save()
             tank = serializer.get("tank_slots")
-            tank_slots = Group(slot=tank, raid=raid, position="Tank")
+            position = Position.objects.get(id=2)
+            tank_slots = Group(slot=tank, raid=raid, position=position)
             tank_slots.save()
             healer = serializer.get("healer_slots")
-            healer_slots = Group(slot=healer, raid=raid, position="Healer")
+            position = Position.objects.get(id=3)
+            healer_slots = Group(slot=healer, raid=raid, position=position)
             healer_slots.save()
         else:
             return Response("Nie masz uprawnień", status=status.HTTP_401_UNAUTHORIZED)
@@ -71,15 +73,18 @@ class RaidDetailView(generics.ListAPIView):
         data = request.data
         raid = Raid.objects.get(id=pk)
         # update list of dd for this raid
-        dd_list = Group.objects.get(raid=raid, position="DD").id
+        position = Position.objects.get(id=1)
+        dd_list = Group.objects.get(raid=raid, position=position).id
         new_dd_list = Group(id=dd_list, slot=data["dd_slots"], raid=raid)
         new_dd_list.save(force_update=True)
         # update list of tanks for this raid
-        tank_list = Group.objects.get(raid=raid, position="Tank").id
+        position = Position.objects.get(id=2)
+        tank_list = Group.objects.get(raid=raid, position=position).id
         new_tank_list = Group(id=tank_list, slot=data["tank_slots"], raid=raid, position="Tank")
         new_tank_list.save(force_update=True)
         # update list of healers for this raid
-        healer_list = Group.objects.get(raid=raid, position="Healer").id
+        position = Position.objects.get(id=3)
+        healer_list = Group.objects.get(raid=raid, position=position).id
         new_helaer_list = Group(id=healer_list, slot=data["healer_slots"], raid=raid, position="Healer")
         new_helaer_list.save(force_update=True)
         #update name of raid
@@ -92,7 +97,6 @@ class RaidDetailView(generics.ListAPIView):
     def delete(self, request, pk):
         raid = Raid.objects.get(id=pk)
         connects = Group.objects.filter(raid=raid)
-        print(connects)
         for i in connects:
             i.delete()
         raid.delete()

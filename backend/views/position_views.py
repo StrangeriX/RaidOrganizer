@@ -19,7 +19,7 @@ from backend.serializers import (
     GuildCreateSerializer,
     GuildSerializer,
     PositionSerializer,
-    GroupSerializer,
+    UserToGroupSerializer,
     RaidCreateSerializer,
     RaidDetailSerializer,
     UserCharacterSerializer,

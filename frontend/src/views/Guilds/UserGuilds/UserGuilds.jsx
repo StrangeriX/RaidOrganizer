@@ -16,7 +16,7 @@ function UserGuilds() {
     });
   };
   return (
-    <Request url={`http://127.0.0.1:8000/api/userto/username/${username}`}>
+    <Request url={`http://127.0.0.1:8000/api/usertoguild/username/${username}`}>
       {({ data, loading, refetch }) => {
         if (loading) {
           return <Spinner />;

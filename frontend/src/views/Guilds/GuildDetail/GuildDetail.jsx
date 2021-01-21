@@ -137,7 +137,7 @@ function GuildDetail(props) {
                                     member[0] === user &&
                                     member[1] !== 'member')) && (
                                   <Request
-                                    url={`http://127.0.0.1:8000/api/userto/mutate/${data?.guild_name}/${member[0]}`}
+                                    url={`http://127.0.0.1:8000/api/usertoguild/mutate/${data?.guild_name}/${member[0]}`}
                                     method="PUT"
                                     variables={user}
                                   >
@@ -172,7 +172,7 @@ function GuildDetail(props) {
                                 )}
                                 {member[0] === user && member[1] !== 'Guild Master' && (
                                   <Request
-                                    url={`http://127.0.0.1:8000/api/userto/mutate/${data?.guild_name}/${user}`}
+                                    url={`http://127.0.0.1:8000/api/usertoguild/mutate/${data?.guild_name}/${user}`}
                                     method="DELETE"
                                   >
                                     {({ mutate, loading: isLeaving }) => {

@@ -36,7 +36,7 @@ const GuildList = ({ guilds }, props) => {
                 <div className="btn-group" role="group">
                   {isAuthenticated ? (
                     <Request
-                      url={`http://127.0.0.1:8000/api/userto/mutate/${guild.guild_name}/${username}`}
+                      url={`http://127.0.0.1:8000/api/usertoguild/mutate/${guild.guild_name}/${username}`}
                       method="POST"
                     >
                       {({ mutate, loading }) => {

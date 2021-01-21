@@ -90,12 +90,9 @@ class GuildSerializer(serializers.ModelSerializer):
         return members
 
     def get_guild_master_name(self, request):
-        print(request)
         users = UserToGuild.objects.filter(guild_id=request.id)
-        print(users)
         for i in users:
             user = UserToGuild.objects.get(id=i.id)
-            print(user.guild_position)
             if user.guild_position_id == 1:
                 guild_master = user.user_id
                 name = User.objects.filter(id=guild_master)
@@ -136,7 +133,7 @@ class PositionSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class GroupSerializer(serializers.ModelSerializer):
+class UserToGroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = "__all__"
@@ -164,7 +161,8 @@ class RaidDetailSerializer(serializers.ModelSerializer):
 
     def get_dd_list(self, request):
         groups = Group.objects.filter(raid=request.id)
-        dd_group = groups.get(position="DD")
+        position = Position.objects.get(id=1)
+        dd_group = groups.get(position=position)
         users = UserToGroup.objects.filter(group_id=dd_group)
         members = []
         for user in users:
@@ -174,7 +172,8 @@ class RaidDetailSerializer(serializers.ModelSerializer):
 
     def get_tank_list(self, request):
         groups = Group.objects.filter(raid=request.id)
-        dd_group = groups.get(position="Tank")
+        position = Position.objects.get(id=2)
+        dd_group = groups.get(position=position)
         users = UserToGroup.objects.filter(group_id=dd_group)
         members = []
         for user in users:
@@ -184,7 +183,8 @@ class RaidDetailSerializer(serializers.ModelSerializer):
 
     def get_healer_list(self, request):
         groups = Group.objects.filter(raid=request.id)
-        dd_group = groups.get(position="Healer")
+        position = Position.objects.get(id=3)
+        dd_group = groups.get(position=position)
         users = UserToGroup.objects.filter(group_id=dd_group)
         members = []
         for user in users:

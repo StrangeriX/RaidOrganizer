@@ -16,7 +16,7 @@ from .views.raid_views import (
     RaidDetailView,
     RaidListView,
 )
-from .views.group_views import GroupView
+from .views.user_to_group_views import UserToGroupView
 
 
 urlpatterns = [
@@ -26,12 +26,12 @@ urlpatterns = [
     path("guild/create", GuildCreate.as_view()),
     path("guild/list/<str:username>", GuildListView.as_view()),
     path("guild/<int:pk>", GuildDetail.as_view()),
-    path("userto/create", UserToGuildView.as_view()),
-    path("userto/mutate/<str:guild>/<str:username>", UserToGuildDetail.as_view()),
-    path("userto/username/<str:username>", UserToGuildListView.as_view()),
+    path("usertoguild/create", UserToGuildView.as_view()),
+    path("usertoguild/mutate/<str:guild>/<str:username>", UserToGuildDetail.as_view()),
+    path("usertoguild/username/<str:username>", UserToGuildListView.as_view()),
     path("position", PositionView.as_view()),
     path("raid/list/<int:guildid>", RaidListView.as_view()),
     path("raid/create", RaidCreateView.as_view()),
     path("raid/<int:pk>", RaidDetailView.as_view()),
-    path("group", GroupView.as_view()),
+    path("usertogroup/mutate/<int:raid_id>/<str:username>", UserToGroupView.as_view()),
 ]

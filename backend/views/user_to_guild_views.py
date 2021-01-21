@@ -21,7 +21,7 @@ from backend.serializers import (
     GuildCreateSerializer,
     GuildSerializer,
     PositionSerializer,
-    GroupSerializer,
+    UserToGroupSerializer,
     RaidCreateSerializer,
     RaidDetailSerializer,
     UserCharacterSerializer,
@@ -66,7 +66,6 @@ class UserToGuildDetail(
 
     def post(self, request, *args, **kwargs):
         data = request.data
-        print(data, args, kwargs)
         guild = Guild.objects.get(guild_name=data["guild"])
         user = User.objects.get(username=data["user"])
         connect = UserToGuild.objects.filter(user=user, guild=guild)
@@ -101,7 +100,6 @@ class UserToGuildDetail(
         if position_id > 2:
             return Response("cant promote", status=status.HTTP_401_UNAUTHORIZED)
         promotion = UserToGuild.objects.get(user=promoted, guild=guild)
-        print(promotion.guild_position.id)
         if promotion.guild_position.id == 3:
             new_position = GuildPosition.objects.get(id=2)
             new_rang = UserToGuild(id=promotion.id, user=promoted, guild=guild, guild_position=new_position)
@@ -114,7 +112,6 @@ class UserToGuildDetail(
             return Response("tak")
 
     def delete(self, request, *args, **kwargs):
-        print(request.data, args, kwargs)
         user = User.objects.get(username=kwargs["username"])
         guild = Guild.objects.get(guild_name=kwargs["guild"])
         userto = UserToGuild.objects.get(guild=guild, user=user)

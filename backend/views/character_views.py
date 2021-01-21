@@ -41,7 +41,6 @@ class CharacterRetriveView(generics.RetrieveUpdateDestroyAPIView):
         position = Position.objects.get(id=data["position"])
         char = Character(id=pk, name=data["name"], position=position)
         char.save(force_update=True)
-        print(char)
         return Response(status=status.HTTP_200_OK)
 
 
