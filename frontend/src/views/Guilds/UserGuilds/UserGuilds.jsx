@@ -2,18 +2,25 @@ import React, { memo } from 'react';
 import { Link } from 'react-router-dom';
 import Request from '../../../api/Request';
 import Spinner from '../../../components/common/Spinner/Spinner';
-import CreateGuildModal from '../CreateGuildModal/CreateGuildModal';
+import CreateGuildModal from '../GuildModals/CreateGuildModal/CreateGuildModal';
 
 function UserGuilds() {
   const username = localStorage.getItem('username');
+  const handleCreateGuild = (mutate, refetch) => (state) => {
 
+    mutate({
+      guild_name: state.name,
+      user_name: state.user,
+    }).then(() => {
+      refetch();
+    });
+  };
   return (
-    <Request url={`http://127.0.0.1:8000/api/userto/${username}`}>
+    <Request url={`http://127.0.0.1:8000/api/userto/username/${username}`}>
       {({ data, loading, refetch }) => {
         if (loading) {
           return <Spinner />;
         }
-        console.log(data);
         return (
           <div className="table-responsive">
             <table className="table">
@@ -22,7 +29,17 @@ function UserGuilds() {
                   <th>Guild Name</th>
                   <th>Actions</th>
                   <th>
-                    <CreateGuildModal />
+                    <Request url="http://127.0.0.1:8000/api/guild/create" method="POST">
+                      {({ mutate, loading: isSaving }) => {
+                        if (isSaving) return <Spinner />;
+                        return (
+                          <CreateGuildModal
+                            refetch={refetch}
+                            onCreateGuild={handleCreateGuild(mutate, refetch)}
+                          />
+                        );
+                      }}
+                    </Request>
                   </th>
                 </tr>
               </thead>

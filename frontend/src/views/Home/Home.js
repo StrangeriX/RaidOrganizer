@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import withAuthentication from '../../api/withAuthentication';
 import Tabs from '../../components/common/Tabs/Tabs';
-import Characters from '../Characters/Characters';
-import GuildList from '../Guilds/Guilds';
+import Characters from '../Characters/CharactersList';
 import UserGuilds from '../Guilds/UserGuilds/UserGuilds';
 import './Home.css';
 

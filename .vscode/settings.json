@@ -5,5 +5,6 @@
     "python.linting.pylintEnabled": false,
     "python.linter": "Flake8",
     "python.formatting.provider": "black",
-    "python.pythonPath": "e:\\PLIKI\\RaidOrganizer\\RaidOrganizer\\env\\Scripts\\python.exe"
+    "python.pythonPath": "C:\\Users\\mqteu\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+    "python.linting.enabled": true
 }

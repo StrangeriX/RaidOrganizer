@@ -16,9 +16,10 @@ from .models import (
 
 
 class CharacterSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Character
-        fields = ("name", "position")
+        fields = "__all__"
 
 
 class UserCharacterSerializer(serializers.ModelSerializer):
@@ -36,7 +37,6 @@ class UserCharacterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Character
         fields = ("id", "name", "user", "username", "position_name")
-
 
 
 
@@ -68,7 +68,6 @@ class GuildSerializer(serializers.ModelSerializer):
     guild_members = serializers.SerializerMethodField()
     raids = serializers.SerializerMethodField()
 
-
     def get_raids(self, request):
         raid = Raid.objects.filter(guild=request.id)
         raids = []
@@ -91,13 +90,16 @@ class GuildSerializer(serializers.ModelSerializer):
         return members
 
     def get_guild_master_name(self, request):
+        print(request)
         users = UserToGuild.objects.filter(guild_id=request.id)
+        print(users)
         for i in users:
             user = UserToGuild.objects.get(id=i.id)
+            print(user.guild_position)
             if user.guild_position_id == 1:
                 guild_master = user.user_id
-            name = User.objects.filter(id=guild_master)
-            return name[0].username
+                name = User.objects.filter(id=guild_master)
+                return name[0].username
 
     class Meta:
         model = Guild

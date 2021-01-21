@@ -1,9 +1,22 @@
 import React, { memo } from 'react';
-import { Link } from 'react-router-dom';
 import { useIsAuthenticated } from '../../api/AuthenticationProvider';
+import Spinner from '../../components/common/Spinner/Spinner';
+import Request from '../../api/Request';
 
-const GuildList = ({ guilds }) => {
+const GuildList = ({ guilds }, props) => {
   const { isAuthenticated } = useIsAuthenticated();
+  const { history } = props;
+  const username = localStorage.getItem('username');
+
+  const onGuildJoin = (mutate, guild) => () => {
+    mutate({
+      user: username,
+      guild_position: '3',
+      guild,
+    }).then(() => {
+      history.push('/home');
+    });
+  };
   return (
     <div className="table-responsive">
       <table className="table">
@@ -22,13 +35,24 @@ const GuildList = ({ guilds }) => {
               <td>
                 <div className="btn-group" role="group">
                   {isAuthenticated ? (
-                    <button type="button" className="btn btn-primary ">
-                      Join
-                    </button>
+                    <Request
+                      url={`http://127.0.0.1:8000/api/userto/mutate/${guild.guild_name}/${username}`}
+                      method="POST"
+                    >
+                      {({ mutate, loading }) => {
+                        if (loading) return <Spinner />;
+                        return (
+                          <button
+                            type="button"
+                            className="btn btn-primary"
+                            onClick={onGuildJoin(mutate, guild.guild_name)}
+                          >
+                            Join
+                          </button>
+                        );
+                      }}
+                    </Request>
                   ) : null}
-                  <Link to={`/guild/${guild.id}`} className="btn btn-success">
-                    Info
-                  </Link>
                 </div>
               </td>
             </tr>

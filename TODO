@@ -1,7 +1,5 @@
-Character add/update ?? problem z backendem
-
-Join Guild backend nie działa :/
-
 Omówić:
-    niezalogowani są pchani na home
-    provider isInGuild?
+    wygasqanie tokenu
+
+userToGuild Create Update
+raid Delete update

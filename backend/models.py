@@ -47,8 +47,7 @@ class UserToGuild(models.Model):
 
 class Raid(models.Model):
     name = models.CharField(max_length=45)
-    date = models.DateField(null=True)  # string comment chyba będzie lepszy??
-
+    date = models.DateField()
     guild = models.ForeignKey(Guild, on_delete=models.CASCADE)
 
     def __str__(self):

@@ -1,29 +1,34 @@
-import React, { useState } from 'react';
-import { AiOutlinePlus } from 'react-icons/ai';
+import React, { memo, useState } from 'react';
+import { IoIosAddCircleOutline } from 'react-icons/io';
 import Modals from '../../../components/common/Modal/Modals';
 
-const CreateCharacterModal = ({ onCreateCharacter }) => {
+const UpdateCharacterModal = ({ onCreateCharacter, variables }) => {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const [state, setState] = useState({
-    name: '',
-    position: '1',
+    name: variables.name,
+    position: variables.position,
   });
 
   const onChange = (e) => {
     setState((previousState) => ({ ...previousState, [e.target.name]: e.target.value }));
   };
-  const handleCreateCharacter = () => {
+  const handleUpdateCharacter = () => {
     onCreateCharacter(state);
   };
 
   return (
     <div>
-      <button type="button" className="btn btn-info" onClick={handleShow} title="create">
-        <AiOutlinePlus />
+      <button type="button" className="btn btn-info" onClick={handleShow}>
+        <IoIosAddCircleOutline />
       </button>
-      <Modals show={show} handleClose={handleClose} onSubmit={handleCreateCharacter}>
+      <Modals
+        title="Create Character"
+        show={show}
+        handleClose={handleClose}
+        onSubmit={handleCreateCharacter}
+      >
         <form>
           <div className="form-group">
             <label>Name</label>
@@ -31,7 +36,7 @@ const CreateCharacterModal = ({ onCreateCharacter }) => {
           </div>
           <div className="form-group">
             <label>Position</label>
-            <select className="form-control" name="position" onChange={onChange}>
+            <select className="form-control" id="position" name="position" onChange={onChange}>
               <option value="1">Damage Dealer</option>
               <option value="2">Tank</option>
               <option value="3">Healer</option>
@@ -42,4 +47,4 @@ const CreateCharacterModal = ({ onCreateCharacter }) => {
     </div>
   );
 };
-export default CreateCharacterModal;
+export default memo(UpdateCharacterModal);

@@ -5,17 +5,19 @@ import Spinner from '../../../components/common/Spinner/Spinner';
 
 function RaidDetail(props) {
   const { raidid } = props.match.params;
-  console.log(raidid);
+  const username = localStorage.getItem('username');
   return (
     <div className="col-md-10 m-auto">
       <Request url={`http://127.0.0.1:8000/api/raid/${raidid}`}>
         {({ data, loading }) => {
           if (loading) return <Spinner />;
-          console.log(data);
           return (
             <div>
               <div className="card card-body md-12">
                 <h3 className="text-center">{data?.name}</h3>
+                <div>
+                  {/* <Request url={`http://127.0.0.1:8000/api/raid/${raidid}`} method="PUT"></Request> Do zrobienia */}
+                </div>
               </div>
               <div className="col-md-8 m-auto">
                 <div className="list-group">

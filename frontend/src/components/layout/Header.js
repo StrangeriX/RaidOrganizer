@@ -1,8 +1,8 @@
 import React, { memo } from 'react';
 import { Link } from 'react-router-dom';
-
 import { useIsAuthenticated } from '../../api/AuthenticationProvider';
 import Sidebar from '../Sidebar/Sidebar';
+import './Header.css';
 
 function GuestLink() {
   return (
@@ -25,7 +25,7 @@ function Header() {
   const username = localStorage.getItem('username');
   const { isAuthenticated } = useIsAuthenticated();
   return (
-    <nav className="navbar navbar-expand-sm navbar-light bg-light">
+    <nav className="navbar navbar-expand-sm">
       <div className="container">
         <div className="col-2">
           <Sidebar />
@@ -41,8 +41,8 @@ function Header() {
             <GuestLink />
           ) : (
             <ul className="navbar-nav ml-auto mt-2 mt-lg-0">
-              <li className="nav-item ">
-                <span>Witaj {username}</span>
+              <li className="nav-item">
+                <span className="welcome">Witaj {username}</span>
               </li>
             </ul>
           )}
