@@ -7,7 +7,7 @@
     "dev": "webpack --mode development --watch",
     "build": "webpack --mode production --config webpack/prod.config.js",
     "start:dev": "webpack-dev-server --env.ENVIRONMENT=development --config webpack/dev.config.js",
-    "postinstall": "cd client && npm install"
+    "postinstall": "cd frontend && npm install"
   },
   "keywords": [],
   "author": "",
