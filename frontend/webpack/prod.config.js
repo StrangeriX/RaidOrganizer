@@ -17,7 +17,7 @@ module.exports = (env) =>
       new HtmlWebpackPlugin({
         hash: true,
         inject: true,
-        template: './public/index.html',
+        template: './templates/frontend/index.html',
         minify: {
           collapseWhitespace: true,
           conservativeCollapse: false,

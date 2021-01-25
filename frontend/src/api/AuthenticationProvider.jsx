@@ -19,19 +19,20 @@ const logoutRequest = () => {
 
 export const useIsAuthenticated = () => {
   const setIsAuthenticated = useContext(AuthenticationDispatchContext);
-  const { isAuthenticated } = useContext(AuthenticationContext);
+  const { isAuthenticated, isAdmin } = useContext(AuthenticationContext);
   const logout = () => {
     setIsAuthenticated({ isAuthenticated: false });
     logoutRequest();
     localStorage.removeItem('token');
     localStorage.removeItem('username');
   };
-  return { isAuthenticated, setIsAuthenticated, logout };
+  return { isAuthenticated, setIsAuthenticated, logout, isAdmin };
 };
 
 const AuthenticationProvider = ({ children }) => {
   const [state, setState] = useState({
     isAuthenticated: false,
+    isAdmin: false,
   });
 
   useEffect(() => {

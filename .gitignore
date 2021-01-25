@@ -5,6 +5,7 @@ env/
 node_modules/
 npm-debug.log
 TODO
+dist/
 
 # Webpack
 /frontend/bundles/*

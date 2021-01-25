@@ -1,4 +1,8 @@
 #!/bin/bash
+cd frontend
+npm ci --also=dev
+npm run build
+
 pip install -r requirements.txt
 
 python manage.py makemigrations

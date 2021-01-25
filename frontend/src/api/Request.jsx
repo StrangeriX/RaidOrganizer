@@ -14,6 +14,7 @@ const Request = ({ url, method = 'GET', children, variables }) => {
     };
     setLoading(true);
     const response = await fetch(url, { method, ...input });
+    // if response 404 to usuń token, setisauthenticated na false
     if (method === 'POST') {
       const text = await response.text();
       setData(text);

@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
 import Request from '../../api/Request';
-import withAuthentication from '../../api/withAuthentication';
 import Spinner from '../../components/common/Spinner/Spinner';
 import GuildList from './GuildList';
 
@@ -17,4 +16,4 @@ class Guilds extends PureComponent {
     );
   }
 }
-export default withAuthentication(Guilds);
+export default Guilds;

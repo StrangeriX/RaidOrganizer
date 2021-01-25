@@ -10,7 +10,7 @@ function Sidebar() {
   const [sidebar, setSidebar] = useState(false);
 
   const showSidebar = () => setSidebar(!sidebar);
-  const { logout } = useIsAuthenticated();
+  const { logout, isAdmin } = useIsAuthenticated();
   return (
     <>
       <div className="nav-item">
@@ -32,6 +32,7 @@ function Sidebar() {
               </Link>
             </li>
           ))}
+          {isAdmin && <button>aaa</button>}
           <button
             type="button"
             onClick={logout}

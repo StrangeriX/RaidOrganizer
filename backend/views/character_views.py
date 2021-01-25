@@ -37,9 +37,10 @@ class CharacterRetriveView(generics.RetrieveUpdateDestroyAPIView):
 
     def put(self, request, pk):
         data = request.data
+        user = User.objects.get(username=data["username"])
         char = Character.objects.get(id=pk)
         position = Position.objects.get(id=data["position"])
-        char = Character(id=pk, name=data["name"], position=position)
+        char = Character(id=pk, name=data["name"], position=position, user=user)
         char.save(force_update=True)
         return Response(status=status.HTTP_200_OK)
 

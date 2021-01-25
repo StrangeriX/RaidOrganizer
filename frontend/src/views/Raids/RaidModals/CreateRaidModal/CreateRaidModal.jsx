@@ -19,7 +19,7 @@ const CreateRaidModal = ({ onCreateRaid, canCreate }) => {
   const handleCreateRaid = () => {
     onCreateRaid(state);
   };
-  const canCreateRaid = (canCreate) => {
+  const canCreateRaid = () => {
     if (canCreate)
       return (
         <button type="button" className="btn btn-info" onClick={handleShow} title="create">
@@ -30,7 +30,7 @@ const CreateRaidModal = ({ onCreateRaid, canCreate }) => {
 
   return (
     <div>
-      {canCreateRaid(canCreate)}
+      {canCreateRaid()}
       <Modals show={show} handleClose={handleClose} onSubmit={handleCreateRaid}>
         <form>
           <label>Name</label>

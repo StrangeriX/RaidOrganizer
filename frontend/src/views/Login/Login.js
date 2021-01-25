@@ -9,6 +9,8 @@ class Login extends Component {
     password: '',
   };
 
+  isAdmin = false;
+
   onSubmit = (e) => {
     const { history, setIsAuthenticated } = this.props;
     e.preventDefault();
@@ -28,7 +30,10 @@ class Login extends Component {
       .then((json) => {
         const { token } = json;
         localStorage.setItem('token', token);
-        setIsAuthenticated({ isAuthenticated: true });
+        setIsAuthenticated({
+          isAuthenticated: true,
+          isAdmin: json.user.is_superuser,
+        });
         history.push('/home');
       });
   };

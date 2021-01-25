@@ -2,41 +2,52 @@ import React, { memo, useState } from 'react';
 import { IoIosAddCircleOutline } from 'react-icons/io';
 import Modals from '../../../components/common/Modal/Modals';
 
-const UpdateCharacterModal = ({ onCreateCharacter, variables }) => {
+const UpdateCharacterModal = ({ onUpdateCharacter, variables }) => {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const [state, setState] = useState({
     name: variables.name,
-    position: variables.position,
+    position: '1',
   });
 
   const onChange = (e) => {
     setState((previousState) => ({ ...previousState, [e.target.name]: e.target.value }));
   };
   const handleUpdateCharacter = () => {
-    onCreateCharacter(state);
+    onUpdateCharacter(state);
   };
-
   return (
     <div>
       <button type="button" className="btn btn-info" onClick={handleShow}>
-        <IoIosAddCircleOutline />
+        Update
       </button>
       <Modals
-        title="Create Character"
+        title="Update character"
         show={show}
         handleClose={handleClose}
-        onSubmit={handleCreateCharacter}
+        onSubmit={handleUpdateCharacter}
       >
         <form>
           <div className="form-group">
             <label>Name</label>
-            <input type="text" className="form-control" name="name" onChange={onChange} />
+            <input
+              type="text"
+              className="form-control"
+              name="name"
+              onChange={onChange}
+              value={state.name}
+            />
           </div>
           <div className="form-group">
             <label>Position</label>
-            <select className="form-control" id="position" name="position" onChange={onChange}>
+            <select
+              className="form-control"
+              id="position"
+              name="position"
+              onChange={onChange}
+              value={state.position}
+            >
               <option value="1">Damage Dealer</option>
               <option value="2">Tank</option>
               <option value="3">Healer</option>

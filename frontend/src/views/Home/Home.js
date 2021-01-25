@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import withAuthentication from '../../api/withAuthentication';
 import Tabs from '../../components/common/Tabs/Tabs';
+import AccountSettings from '../AccountSettings/AccountSettings';
 import Characters from '../Characters/CharactersList';
 import UserGuilds from '../Guilds/UserGuilds/UserGuilds';
 import './Home.css';
+import HomeImg from '../../../static/images/Home.png';
 
 function Home() {
   const [tabs, setTabs] = useState(0);
@@ -21,7 +23,7 @@ function Home() {
   return (
     <div className="col-md-10 m-auto">
       <div className="card card-body mt-12">
-        <h2 className="text-center">Home</h2>
+        <img src={HomeImg}/>
       </div>
 
       <ul className="nav nav-tabs nav-justified">
@@ -41,6 +43,7 @@ function Home() {
           </div>,
           <div>
             <h3 className="text-center">Account Settings</h3>
+            <AccountSettings />
           </div>,
         ]}
       />

@@ -13,6 +13,7 @@ function RaidDetail(props) {
     });
   };
   const handleLeaveRaid = (mutate, refetch) => () => {
+    console.log("aaaaaaaaaaaaaaaaaa");
     mutate().then(() => {
       refetch();
     });
@@ -31,7 +32,6 @@ function RaidDetail(props) {
               <div className="card card-body md-12">
                 <h3 className="text-center">{data?.name}</h3>
                 <div className="row">
-                  {/* <Request url={`http://127.0.0.1:8000/api/raid/${raidid}`} method="PUT"></Request> Do zrobienia */}
                   {!data?.tank_list.includes(username) && (
                     <Request
                       url={`http://127.0.0.1:8000/api/usertogroup/mutate/${raidid}/${username}`}
@@ -96,23 +96,25 @@ function RaidDetail(props) {
                     </Request>
                   )}
                   <div className="col offset-md-4">
-                    <Request
-                      url={`http://127.0.0.1:8000/api/usertogroup/mutate/${raidid}/${username}`}
-                      method="DELETE"
-                    >
-                      {({ mutate, loading: isLeavingRaid }) => {
-                        if (isLeavingRaid) return <Spinner />;
-                        return (
-                          <button
-                            type="button"
-                            className="btn btn-warning"
-                            onChange={handleLeaveRaid(mutate, refetch)}
-                          >
-                            Leave Raid
-                          </button>
-                        );
-                      }}
-                    </Request>
+                    {isInRoster && (
+                      <Request
+                        url={`http://127.0.0.1:8000/api/usertogroup/mutate/${raidid}/${username}`}
+                        method="DELETE"
+                      >
+                        {({ mutate, loading: isLeavingRaid }) => {
+                          if (isLeavingRaid) return <Spinner />;
+                          return (
+                            <button
+                              type="button"
+                              className="btn btn-warning"
+                              onClick={handleLeaveRaid(mutate, refetch)}
+                            >
+                              Leave Raid
+                            </button>
+                          );
+                        }}
+                      </Request>
+                    )}
                   </div>
                 </div>
               </div>

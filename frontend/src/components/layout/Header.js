@@ -1,8 +1,10 @@
 import React, { memo } from 'react';
 import { Link } from 'react-router-dom';
 import { useIsAuthenticated } from '../../api/AuthenticationProvider';
+import Login from '../../views/Login/Login';
 import Sidebar from '../Sidebar/Sidebar';
 import './Header.css';
+import Title from '../../../static/images/Title.png';
 
 function GuestLink() {
   return (
@@ -31,8 +33,8 @@ function Header() {
           <Sidebar />
         </div>
         <div className="navbar-brand col-5">
-          <Link to="/home" style={{ color: '#000' }}>
-            <h3>Raid Organizer</h3>
+          <Link to="/home">
+            <img src={Title} />
           </Link>
         </div>
 

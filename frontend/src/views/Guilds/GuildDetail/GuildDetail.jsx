@@ -201,7 +201,7 @@ function GuildDetail(props) {
                         <thead>
                           <tr>
                             <th>Raid Name</th>
-                            <th>Details</th>
+                            <th>Actions</th>
                             <th>
                               <Request url="http://127.0.0.1:8000/api/raid/create" method="POST">
                                 {({ mutate, loading: isCreating }) => {

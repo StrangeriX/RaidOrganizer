@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from knox.models import AuthToken
 from django.contrib.auth import login
 from .serializers import UserSerializer, RegisterSerializer, LoginSerializer
+from django.contrib.auth.models import User
 
 
 # Register API
@@ -51,3 +52,10 @@ class UserAPI(generics.RetrieveAPIView):
 
     def get_object(self):
         return self.request.user
+
+    def put(self, request):
+        user = self.request.user
+        new_password = request.data["newpassword"]
+        user.set_password(new_password)
+        user.save()
+        return Response("password changed")

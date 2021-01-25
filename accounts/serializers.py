@@ -2,11 +2,12 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 
+
 # User serializer
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ("id", "username", "email")
+        fields = ("id", "username", "email", "is_superuser")
 
 
 # Register

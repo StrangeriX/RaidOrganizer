@@ -3,6 +3,7 @@ import { AiFillDelete } from 'react-icons/ai';
 import Request from '../../api/Request';
 import Spinner from '../../components/common/Spinner/Spinner';
 import CreateCharacterModal from './CreateCharacterModal/CreateCharacterModal';
+import UpdateCharacterModal from './UpdateCharacterModal/UpdateCharacterModal';
 
 const CharactersList = () => {
   const username = localStorage.getItem('username');
@@ -22,6 +23,7 @@ const CharactersList = () => {
   };
   const handleUpdateCharacter = (mutate, refetch) => (state) => {
     mutate({
+      username,
       position: state.position,
       name: state.name,
     }).then(() => {
@@ -78,6 +80,23 @@ const CharactersList = () => {
                             >
                               <AiFillDelete />
                             </button>
+                          );
+                        }}
+                      </Request>
+                      <Request
+                        url={`http://localhost:8000/api/char/mutate/${character.id}`}
+                        method="PUT"
+                      >
+                        {({ mutate, loading: isUpdating }) => {
+                          if (isUpdating) return <Spinner />;
+                          return (
+                            <UpdateCharacterModal
+                              variables={{
+                                name: character.name,
+                                position: character.position_name,
+                              }}
+                              onUpdateCharacter={handleUpdateCharacter(mutate, refetch)}
+                            />
                           );
                         }}
                       </Request>

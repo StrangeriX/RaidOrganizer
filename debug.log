@@ -2,3 +2,7 @@
 [0121/104505.749:ERROR:directory_reader_win.cc(43)] FindFirstFile: System nie mo¿e odnaleŸæ okreœlonej œcie¿ki. (0x3)
 [0121/122644.165:ERROR:filesystem_win.cc(129)] GetFileAttributes c:\Users\mqteu\AppData\Roaming\Code\User\workspaceStorage\93e20be5cd1f8d418b8acfec08d45dff\ms-vscode.js-debug\.profile\Crashpad\attachments\ed65c5e2-467b-457c-b5cf-b606fed3538b: System nie mo¿e odnaleŸæ okreœlonej œcie¿ki. (0x3)
 [0121/155020.860:ERROR:filesystem_win.cc(129)] GetFileAttributes c:\Users\mqteu\AppData\Roaming\Code\User\workspaceStorage\93e20be5cd1f8d418b8acfec08d45dff\ms-vscode.js-debug\.profile\Crashpad\attachments\34476471-a798-4527-9b74-dff5d4d6ee99: System nie mo¿e odnaleŸæ okreœlonej œcie¿ki. (0x3)
+[0121/164127.562:ERROR:directory_reader_win.cc(43)] FindFirstFile: System nie mo¿e odnaleŸæ okreœlonej œcie¿ki. (0x3)
+[0122/111330.033:ERROR:directory_reader_win.cc(43)] FindFirstFile: System nie mo¿e odnaleŸæ okreœlonej œcie¿ki. (0x3)
+[0125/103332.118:ERROR:directory_reader_win.cc(43)] FindFirstFile: System nie mo¿e odnaleŸæ okreœlonej œcie¿ki. (0x3)
+[0125/144847.480:ERROR:filesystem_win.cc(129)] GetFileAttributes c:\Users\mqteu\AppData\Roaming\Code\User\workspaceStorage\93e20be5cd1f8d418b8acfec08d45dff\ms-vscode.js-debug\.profile\Crashpad\attachments\3ffa5c27-4e83-40fe-a3d6-857f02398bbd: System nie mo¿e odnaleŸæ okreœlonej œcie¿ki. (0x3)

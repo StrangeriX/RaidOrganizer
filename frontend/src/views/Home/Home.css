@@ -1,5 +1,7 @@
 body {
   background-color: #b8dff0;
+  background-image: url(../../../static/images/background.jpg);
+  background-size: cover;
 }
 div.card {
   background-color: #b8dff0;
@@ -7,3 +9,9 @@ div.card {
 .table-responsive {
   background-color: #ffffff;
 }
+img {
+  max-width: max-content;
+  max-height: max-content;
+  align-self: center;
+}
+

@@ -10,8 +10,8 @@ const Modals = ({ title, show, handleClose, onSubmit, children }) => (
       <div>{children}</div>
     </Modal.Body>
     <Modal.Footer>
-      <button type="button" onClick={onSubmit}>
-        aa
+      <button type="button" className="btn btn-success" onClick={onSubmit}>
+        Submit
       </button>
     </Modal.Footer>
   </Modal>

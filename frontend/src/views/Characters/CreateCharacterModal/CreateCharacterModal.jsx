@@ -21,7 +21,7 @@ const CreateCharacterModal = ({ onCreateCharacter }) => {
   return (
     <div>
       <button type="button" className="btn btn-info" onClick={handleShow} title="create">
-        <AiOutlinePlus />
+        Create Character
       </button>
       <Modals show={show} handleClose={handleClose} onSubmit={handleCreateCharacter}>
         <form>
