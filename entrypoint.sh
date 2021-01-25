@@ -1,4 +1,7 @@
 #!/bin/bash
+node --version
+npm --version
+
 cd frontend
 npm ci --also=dev
 npm run build
