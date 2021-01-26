@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import withAuthentication from '../../api/withAuthentication';
 
 class Register extends Component {
@@ -17,8 +17,6 @@ class Register extends Component {
     const { username, email, password } = this.state;
 
     if (this.password === this.passwordConfirm) {
-      console.log('Good passwords');
-      // fetch
       fetch('http://127.0.0.1:8000/auth/register', {
         method: 'POST',
         body: JSON.stringify({ username, email, password }),
@@ -102,4 +100,4 @@ class Register extends Component {
   }
 }
 
-export default withAuthentication(Register);
+export default withRouter(withAuthentication(Register));

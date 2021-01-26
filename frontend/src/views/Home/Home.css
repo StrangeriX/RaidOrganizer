@@ -1,13 +1,24 @@
 body {
-  background-color: #b8dff0;
+  background-color: black;
   background-image: url(../../../static/images/background.jpg);
-  background-size: cover;
+  background-size:initial;
+  background-repeat: no-repeat;
+  color: black;
+}
+body.img{
+  max-width: 100%;
 }
 div.card {
-  background-color: #b8dff0;
+  background: #403427;
+  opacity: 0.9;
+}
+div.card h2{
+  opacity: 1;
+  color: black;
 }
 .table-responsive {
-  background-color: #ffffff;
+  background: silver;
+  opacity: 0.8;
 }
 img {
   max-width: max-content;
@@ -15,3 +26,15 @@ img {
   align-self: center;
 }
 
+.nav-justified .nav-item{
+  opacity: 0.8;
+  font-size: medium;
+}
+button.btn{
+  opacity: 1;
+}
+
+label, p{
+  opacity:1;
+  color: black;
+}

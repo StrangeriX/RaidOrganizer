@@ -13,7 +13,6 @@ function RaidDetail(props) {
     });
   };
   const handleLeaveRaid = (mutate, refetch) => () => {
-    console.log("aaaaaaaaaaaaaaaaaa");
     mutate().then(() => {
       refetch();
     });

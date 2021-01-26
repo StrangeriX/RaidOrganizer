@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import Request from '../../../../api/Request';
 import Modals from '../../../../components/common/Modal/Modals';
-import Spinner from '../../../../components/common/Spinner/Spinner';
 
 const CreateGuildModal = ({ onCreateGuild }) => {
   const [show, setShow] = useState(false);

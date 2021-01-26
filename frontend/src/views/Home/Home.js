@@ -19,11 +19,10 @@ function Home() {
     if (typeof activeTab !== 'number' || activeTab >= elements?.lenght) return null;
     return elements[activeTab];
   };
-
   return (
     <div className="col-md-10 m-auto">
-      <div className="card card-body mt-12">
-        <img src={HomeImg}/>
+      <div className="card card-body mt-12 sm-2">
+        <img src={HomeImg} alt="home" />
       </div>
 
       <ul className="nav nav-tabs nav-justified">

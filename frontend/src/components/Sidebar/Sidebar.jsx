@@ -32,7 +32,13 @@ function Sidebar() {
               </Link>
             </li>
           ))}
-          {isAdmin && <button>aaa</button>}
+          {isAdmin && (
+            <li className="nav-text">
+              <a href="http://127.0.0.1:8000/admin/login/?next=/admin/">
+                <span>Admin Site</span>
+              </a>
+            </li>
+          )}
           <button
             type="button"
             onClick={logout}

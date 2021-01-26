@@ -1,15 +1,19 @@
 .nav-menu{
-    background-color: #0245A3;
+    background-color: #403427;
 }
 .navbar{
-    background-color: #0245A3;
+    background-color: #403427;
 }
 .navbar-toggle{
-    background-color: #0245A3;
+    background-color: #403427;
 }
 .menu-bars{
     color: #ffffff;
 }
 span.welcome{
     font-size: large;
+    color: black;
+}
+div ul li.nav-item a {
+    color: black;
 }

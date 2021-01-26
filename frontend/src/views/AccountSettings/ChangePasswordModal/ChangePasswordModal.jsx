@@ -10,6 +10,7 @@ const ChangePasswordModal = ({ onPasswordChange }) => {
   });
 
   const onChange = (e) => {
+    console.log(state);
     setState((previousState) => ({ ...previousState, [e.target.name]: e.target.value }));
   };
   const handleChangePassword = () => {
@@ -29,7 +30,7 @@ const ChangePasswordModal = ({ onPasswordChange }) => {
         <form>
           <div className="form-group">
             <label>New password</label>
-            <input type="text" className="form-control" name="name" onChange={onChange} />
+            <input type="text" className="form-control" name="new_password" onChange={onChange} />
           </div>
         </form>
       </Modals>
